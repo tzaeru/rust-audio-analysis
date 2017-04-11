@@ -1,0 +1,1097 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"koa",
+				"koa"
+			],
+			[
+				"user",
+				"user"
+			],
+			[
+				"println",
+				"println\tprintln!(…)"
+			],
+			[
+				"g",
+				"generator Module (generator.rs) : C:\\Users\\tzaeru\\Documents\\the-infinite-horizon\\src\\universe\\generator.rs"
+			],
+			[
+				"planet",
+				"planet_furthest_dist"
+			],
+			[
+				"pl",
+				"planet_closest_dist"
+			],
+			[
+				"amount",
+				"amount_of"
+			],
+			[
+				"amoun",
+				"amount_of"
+			],
+			[
+				"poss",
+				"possibility"
+			],
+			[
+				"star",
+				"star_id"
+			],
+			[
+				"print",
+				"println\tprintln!(…)"
+			],
+			[
+				"uplo",
+				"upload_to_s3"
+			],
+			[
+				"mode",
+				"moderation_stream_info"
+			],
+			[
+				"get_",
+				"get_new_remote_data\tparam"
+			],
+			[
+				"nwn_",
+				"nwnplayer_conf"
+			],
+			[
+				"load_",
+				"_load_player_name"
+			],
+			[
+				"STATUS",
+				"STATUS_DOWNLOADING\tstatement"
+			],
+			[
+				"depende",
+				"dependency_manager"
+			],
+			[
+				"mod",
+				"modified_at"
+			],
+			[
+				"dm_p",
+				"dm_pass_var\tstatement"
+			],
+			[
+				"main",
+				"main_conf_values\tstatement"
+			],
+			[
+				"get",
+				"get_cdkey_path\tfunction"
+			],
+			[
+				"server",
+				"server_name\tparam"
+			],
+			[
+				"back_",
+				"background_image\tglobalstmt"
+			],
+			[
+				"checksum",
+				"checksum_entry\tstatement"
+			],
+			[
+				"_chunk",
+				"_chunk_report\tfunction"
+			],
+			[
+				"total_",
+				"total_size_of_updates\tstatement"
+			],
+			[
+				"total",
+				"total_size_of_updates\tstatement"
+			],
+			[
+				"path",
+				"path_finder\tmodule"
+			],
+			[
+				"no",
+				"NO_PATH\tstatement"
+			],
+			[
+				"resolved",
+				"resolved_path"
+			],
+			[
+				"text",
+				"textvariable"
+			],
+			[
+				"theme",
+				"theme_names\tfunction"
+			],
+			[
+				"rel",
+				"relwidth"
+			],
+			[
+				"background",
+				"background_label\tstatement"
+			],
+			[
+				"universe",
+				"Universe"
+			],
+			[
+				"defa",
+				"Default"
+			],
+			[
+				"Compone",
+				"ComponentManager\tmodule"
+			],
+			[
+				"Com",
+				"ComponentPool\tclass"
+			],
+			[
+				"Comp",
+				"ComponentManager\tmodule"
+			],
+			[
+				"SERI",
+				"SERIALIZE_COMPONENT_NEW\tstatement"
+			],
+			[
+				"SERIALI",
+				"SERIALIZE_COMPONENT_NEW\tstatement"
+			],
+			[
+				"COMpon",
+				"ComponentTypes\tmodule"
+			],
+			[
+				"_resolve",
+				"_resolve_movement_phase\tfunction"
+			],
+			[
+				"client",
+				"clientevents\tmodule"
+			],
+			[
+				"amount_of",
+				"amount_of_tiles\tstatement"
+			],
+			[
+				"Cl",
+				"clientevents\tmodule"
+			],
+			[
+				"CLIENT_",
+				"CLIENT_RECEIVED_MAP_SERIALIZATION\tstatement"
+			],
+			[
+				"SERIA",
+				"SERIALIZE_MAP_FULL\tstatement"
+			],
+			[
+				"Server",
+				"ServerMessages\tclass"
+			],
+			[
+				"tileset",
+				"tileset_serialization\tstatement"
+			],
+			[
+				"Entit",
+				"EntityManager\tclass"
+			],
+			[
+				"Entity",
+				"EntityManager\tmodule"
+			],
+			[
+				"Enti",
+				"EntityManager\tmodule"
+			],
+			[
+				"dir",
+				"DirectObject\tclass"
+			],
+			[
+				"mouse_pos",
+				"mouse_position\tstatement"
+			],
+			[
+				"mouse_",
+				"mouse_position\tstatement"
+			],
+			[
+				"COmp",
+				"ComponentTypes\tclass"
+			],
+			[
+				"Component",
+				"ComponentTypes\tclass"
+			],
+			[
+				"Compon",
+				"ComponentTypes\tclass"
+			],
+			[
+				"self",
+				"self"
+			],
+			[
+				"x",
+				"x"
+			],
+			[
+				"pn",
+				"PNMImage"
+			],
+			[
+				"sca",
+				"setScale"
+			],
+			[
+				"event",
+				"event"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Cargo.toml",
+			"settings":
+			{
+				"buffer_size": 146,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/server/main.rs",
+			"settings":
+			{
+				"buffer_size": 157,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/client_test/main.rs",
+			"settings":
+			{
+				"buffer_size": 157,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/lib.rs",
+			"settings":
+			{
+				"buffer_size": 65,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "rust-audio-analysis.sublime-project",
+			"settings":
+			{
+				"buffer_size": 70,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Rust/Cargo.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test"
+				]
+			],
+			[
+				"Packages/Rust/Cargo.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Bench"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Rust/Cargo.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Rust/Cargo.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/Rust/Rust.sublime-build",
+				"Run"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Rust/Rust.sublime-build",
+					""
+				],
+				[
+					"Packages/Rust/Rust.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/Rust/Rust.sublime-build",
+				"Run"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 104.0,
+		"last_filter": "install",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install package",
+				"Package Control: Install Package"
+			],
+			[
+				"enable pac",
+				"Package Control: Enable Package"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"enable p",
+				"Package Control: Enable Package"
+			],
+			[
+				"update ",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"disable ",
+				"Package Control: Disable Package"
+			],
+			[
+				"package install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: List Packages"
+			],
+			[
+				"enable pack",
+				"Package Control: Enable Package"
+			],
+			[
+				"disabl",
+				"Package Control: Disable Package"
+			],
+			[
+				"install pack",
+				"Package Control: Install Package"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"disable p",
+				"Package Control: Disable Package"
+			],
+			[
+				"disable pack",
+				"Package Control: Disable Package"
+			],
+			[
+				"disable pa",
+				"Package Control: Disable Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"enable ",
+				"Package Control: Enable Package"
+			],
+			[
+				"install pac",
+				"Package Control: Install Package"
+			],
+			[
+				"list pack",
+				"Package Control: Install Package"
+			],
+			[
+				"upgrade ",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"Package Control: disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: re",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Disable Package"
+			],
+			[
+				"Package Control: remo",
+				"Package Control: Remove Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 287.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/tzaeru/Documents/rust-audio-analysis",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/server",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/target",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/target/debug"
+	],
+	"file_history":
+	[
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/bin/client.rs",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/bin/server.rs",
+		"/C/Users/tzaeru/AppData/Roaming/Sublime Text 3/Packages/User/Rust.sublime-settings",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp11754/home/tzaeru/backend2/server-user/config.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp07305/home/tzaeru/backend2/server-user/user-routes.js",
+		"/C/Users/tzaeru/AppData/LocalLow/Uplause/ues2_client/configs/inputs.uesc",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp52412/home/tzaeru/backend2/server-user/user.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp26950/home/tzaeru/backend2/server-user/user-controllers.js",
+		"/C/Users/tzaeru/Documents/sound-analyser-2.0/audio.py",
+		"/C/Users/tzaeru/Documents/sound-analyser-2.0/analysis.py",
+		"/C/Users/tzaeru/Documents/sound-analyser-2.0/server.py",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/Cargo.toml",
+		"/C/Users/tzaeru/AppData/LocalLow/Uplause/ues2_client/configs/test.uesc",
+		"/C/Users/tzaeru/AppData/LocalLow/Uplause/ues2_client/configs/default_inputs.uesc",
+		"/C/Users/tzaeru/Documents/ues2/ues_updater/src/main.rs",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp04223/home/tzaeru/backend2/server-logging/logging_postgre.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp26525/home/tzaeru/backend2/server-files/files_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp03376/home/tzaeru/backend2/server-user/user-controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp47715/home/tzaeru/backend2/server-user/user-routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp25976/home/tzaeru/backend2/server-user/user-controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp26325/home/tzaeru/backend2/server-files/files_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp40450/home/tzaeru/backend2/server-files/files_routes.js",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/solar_system.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/galaxy.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/main.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/utility/mod.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/generator.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/actions/solar_system.js",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/initializers/game_db.js",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/public/index.html",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/public/content1.html",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp07183/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/settings-1.json",
+		"/C/Users/tzaeru/AppData/Local/Temp/settings.json",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/utility/serializer.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/.gitignore",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/package.json",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/mod.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/Cargo.toml",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/universe.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/web/backend/actions/showDocumentation.js",
+		"/C/Users/tzaeru/Documents/ANN-Digit-Recognizer/src/network/neuron.rs",
+		"/C/Users/tzaeru/Documents/ANN-Digit-Recognizer/src/main.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/the-infinite-horizon.sublime-project",
+		"/C/Users/tzaeru/Documents/ANN-Digit-Recognizer/Cargo.toml",
+		"/C/Users/tzaeru/Documents/ANN-Digit-Recognizer/src/network/network.rs",
+		"/C/Users/tzaeru/Documents/ANN-Digit-Recognizer/src/network/mod.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/src/universe/star.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/main.rs",
+		"/C/Users/tzaeru/Documents/the-infinite-horizon/project.sublime-project",
+		"/C/Users/tzaeru/Documents/aepuol.txt",
+		"/C/Users/tzaeru/Documents/Viikko 36, maanantai",
+		"/C/Users/tzaeru/Documents/tarina.txt",
+		"/C/Users/tzaeru/Documents/tiin.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp59260/home/tzaeru/backend2/server-files/files_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp11400/home/tzaeru/backend2/server-files/files_models.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp21621/home/tzaeru/backend2/server-files/files.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp18975/home/tzaeru/backend2/server-mission/mission_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp11966/home/tzaeru/backend2/server-mission/mission_models.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp18531/home/tzaeru/backend2/server-files/files_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp18114/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp46919/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp37656/home/tzaeru/backend2/server-logging/logging_postgre.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp37948/home/tzaeru/backend2/server-logging/logging_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp59555/home/tzaeru/backend2/server-mission/mission_routes.js",
+		"/C/Users/tzaeru/Documents/game.py",
+		"/C/Users/tzaeru/AppData/LocalLow/DefaultCompany/UES/configs/test.uesc",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp05391/home/tzaeru/backend2/server-mission/mission_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp05391/home/tzaeru/backend2/server-mission/test.cpp",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp00842/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp59568/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp02842/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/LocalLow/DefaultCompany/UES/missions/missions.json",
+		"/C/Users/tzaeru/AppData/LocalLow/DefaultCompany/UES/missions/test_mission1-57fdff52317176414b3a1e24/mission_executable.json",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp25242/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/Documents/NWNLauncher/gui.py",
+		"/C/Users/tzaeru/Documents/NWNLauncher/config.py",
+		"/C/Users/tzaeru/Documents/NWNLauncher/version_checker.py",
+		"/C/Users/tzaeru/Documents/NWNLauncher/dependency_manager.py",
+		"/C/Users/tzaeru/Documents/NWNLauncher/main.py",
+		"/C/Users/tzaeru/Documents/NWNLauncher/freeze_builds.py",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp53607/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp15813/home/potm/launcher/files/files.toml",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp43070/home/tzaeru/projects/potm/files/files.toml",
+		"/C/Users/tzaeru/Documents/NWNLauncher/config/main_config.toml",
+		"/C/Users/tzaeru/AppData/Local/Temp/files-1.toml",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp35908/home/tzaeru/projects/potm/files/version",
+		"/C/Users/tzaeru/Desktop/desktop_switcher.ahk",
+		"/F/BroswerDownloads/ESL INS Competitive v1_6/ESL INS Competitive v1_6/insurgency/cfg/server.cfg",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp11904/home/insserver/ambush12/serverfiles/insurgency/scripts/playlists/custom/esl_ins_comp_v1_6.playlist",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp36505/home/insserver/ambush12/serverfiles/insurgency/cfg/ins-server_ambush_12.cfg",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp36479/home/insserver/ambush12/insserver_ambush_12",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp28672/home/insserver/ambush12/serverfiles/insurgency/scripts/theaters/esl_ins_comp_amb_5on5_v1_5c.theater",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp36410/home/insserver/ambush12/serverfiles/insurgency/cfg/server.cfg",
+		"/C/Users/tzaeru/Documents/NWNLauncher/utilities.py",
+		"/C/Users/tzaeru/AppData/Local/Temp/files-2.toml",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp38454/home/potm/launcher/app.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp38169/home/potm/launcher/logging.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/files.toml",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp09442/home/pz/Zomboid/mods/nocturnal zombies/mod.info",
+		"/C/Users/tzaeru/Documents/hal.rtf",
+		"/C/Users/tzaeru/Documents/kirj.rtf",
+		"/C/Users/tzaeru/Documents/sair.rtf",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp04431/home/tzaeru/uplause_server/uplause-server-user/user-controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp30267/home/tzaeru/uplause_server/uplause-server-logging/logging_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp49711/home/tzaeru/uplause_server/uplause-server-user/user-models.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp56078/home/tzaeru/uplause_server/uplause-server-logging/logging_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp30994/home/tzaeru/uplause_server/uplause-server-logging/logging_models.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp29401/home/tzaeru/uplause_server/uplause-server-logging/logging_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp04199/home/tzaeru/uplause_server/uplause-server-user/user-routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp54047/home/tzaeru/uplause_server/uplause-server-vote/vote_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp30359/home/tzaeru/uplause_server/uplause-server-vote/streamr_templates/canvas_template.json",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp54836/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
+		"/F/BroswerDownloads/node_parse_task_final/node_parse_task/api_services.js",
+		"/F/BroswerDownloads/solved_tasks/solved_tasks/api_services.js",
+		"/F/BroswerDownloads/node_parse_task_done/node_parse_task/api_services.js",
+		"/F/BroswerDownloads/uplause/uplause/api_services.js",
+		"/F/BroswerDownloads/uplause/uplause/main.js",
+		"/F/BroswerDownloads/node_parse_task_done/node_parse_task/routes.js",
+		"/F/BroswerDownloads/node_parse_task/node_parse_task/package.json",
+		"/F/BroswerDownloads/node_parse_task/node_parse_task/routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp46772/home/tzaeru/jot.txt",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp44198/home/tzaeru/uplause_server/uplause-server-logging/logging_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp46204/home/tzaeru/uplause_server/uplause-server-logging/logging_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp56226/home/tzaeru/uplause_server/uplause-server-vote/vote_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp56526/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp39585/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp39581/home/tzaeru/uplause_server/uplause-server-vote/vote_models.js"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"get_db_from_rms",
+			"20",
+			"en",
+			"api_key",
+			"server_ip",
+			"_load_remote_files_data",
+			"server_ip",
+			"nwn_server_address",
+			"setup_config_for",
+			"nwn_server_address",
+			"remote_files_data",
+			"_update_checksum_entry",
+			"tga",
+			"override",
+			"tga",
+			"override",
+			"config.toml",
+			"load_config",
+			"config_path",
+			"_load_remote_files_data",
+			".tga",
+			"override",
+			"doing check",
+			"_update_checksum_entry",
+			"_find_entry_checksum_match",
+			"_update_checksum_entry",
+			"portrait",
+			"tga",
+			"print",
+			"override",
+			"Thread",
+			"update_check_queued",
+			"2da_v2",
+			"cvbi",
+			"root",
+			"name\": \"SendToStream",
+			"\"name\": \"stream\"",
+			"SendToStream",
+			"\"name\": \"Stream\"",
+			"streamName",
+			"stream",
+			"update_check_queued",
+			"_do_check_update",
+			"dependency_manager",
+			"update",
+			"launch",
+			"path",
+			"update",
+			"dm_pass_var",
+			"dm_var",
+			"dm_checkbox",
+			"dm_checkbox_pos",
+			"_create_label",
+			"LARGE_FONT",
+			"checking for",
+			"version",
+			"command",
+			"try ",
+			"_gog_popupmsg",
+			"_move_entry",
+			"checksum",
+			"_load_remote_files_data",
+			"_image_to_enabled",
+			"data_as_dict",
+			"_load_remote_files_data",
+			"str(",
+			"target_file",
+			"_move_entry",
+			"move_ent",
+			"[\"name\"]",
+			"target_file",
+			"target_file ",
+			"time",
+			"_find_entry_checksum_match",
+			"_create_label_button",
+			"overrides",
+			"_dm_checkbox_clicked",
+			"LAUNCH",
+			"launch",
+			"image=",
+			"print",
+			" in ",
+			"get_path",
+			"images/",
+			"set_path",
+			"set_nwn_path",
+			"get_path()",
+			"for ",
+			"_update_entry_to_local_data",
+			"_update_checksum_entry",
+			"status_updated",
+			"entries_to_update",
+			"_find_entry_checksum_match",
+			"_update_checksum_entry",
+			"_update_entry_to_local_data",
+			"_update_checksum_entry",
+			"_generate_file_md5",
+			"do_quit",
+			"35",
+			"_load_remote_files_data",
+			"path.join",
+			"+=",
+			"scifi",
+			"movement_target",
+			"print",
+			",\n",
+			"manager",
+			"boost",
+			"1.55",
+			"1.54",
+			"gui",
+			"Panda3dApp",
+			"foreground",
+			"24",
+			");\n",
+			"42",
+			"setSpecular",
+			"createMaterialSliders",
+			"sync",
+			"fps",
+			"world_cons",
+			"world_generat",
+			");\n",
+			"GL_",
+			"windowEvent",
+			"render",
+			"win",
+			"fps"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Cargo.toml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 146,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								145,
+								145
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/server/main.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 157,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								157,
+								157
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/client_test/main.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 157,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11,
+								11
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/lib.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 65,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "rust-audio-analysis.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 70,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								59,
+								59
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 175.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.variable_get":
+	{
+		"height": 118.0
+	},
+	"pinned_build_system": "Packages/Rust/Cargo.sublime-build",
+	"project": "rust-audio-analysis.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 305.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

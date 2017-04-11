@@ -1,0 +1,19 @@
+[package]
+name = "audio-analysis"
+version = "0.1.0"
+authors = ["tzaeru <tzaeru@gmail.com>"]
+
+[dependencies]
+portaudio = "0.7.0"
+
+[[bin]]
+name = "server"
+path = "src/server/main.rs"
+
+[[bin]]
+name = "client-test"
+path = "src/client_test/main.rs"
+
+[[bin]]
+name = "test"
+path = "src/test/main.rs"

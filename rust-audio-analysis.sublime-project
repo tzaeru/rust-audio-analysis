@@ -1,0 +1,19 @@
+{
+	"build_systems":
+	[
+	],
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+
+	"build_systems":
+    [
+        {
+            "name": "RAA",
+            "cmd": ["cargo", "run", "--bin", "test"]
+        }
+    ]
+}
