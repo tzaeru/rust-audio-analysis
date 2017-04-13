@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"control",
+				"control_stream_info"
+			],
+			[
+				"result",
+				"result_stream_info"
+			],
+			[
+				"moder",
+				"moderation_stream_info"
+			],
+			[
 				"koa",
 				"koa"
 			],
@@ -271,34 +283,7 @@
 			"file": "Cargo.toml",
 			"settings":
 			{
-				"buffer_size": 146,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/server/main.rs",
-			"settings":
-			{
-				"buffer_size": 157,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/client_test/main.rs",
-			"settings":
-			{
-				"buffer_size": 157,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/lib.rs",
-			"settings":
-			{
-				"buffer_size": 65,
+				"buffer_size": 328,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -307,9 +292,46 @@
 			"file": "rust-audio-analysis.sublime-project",
 			"settings":
 			{
-				"buffer_size": 70,
+				"buffer_size": 202,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/lib.rs",
+			"settings":
+			{
+				"buffer_size": 88,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/test/main.rs",
+			"settings":
+			{
+				"buffer_size": 301,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/analysis/pa_interface.rs",
+			"settings":
+			{
+				"buffer_size": 4888,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/analysis/mod.rs",
+			"settings":
+			{
+				"buffer_size": 21,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "mod pa_interface;"
 			}
 		}
 	],
@@ -560,12 +582,28 @@
 	[
 		"/C/Users/tzaeru/Documents/rust-audio-analysis",
 		"/C/Users/tzaeru/Documents/rust-audio-analysis/src",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/analysis",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/client_test",
 		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/server",
-		"/C/Users/tzaeru/Documents/rust-audio-analysis/target",
-		"/C/Users/tzaeru/Documents/rust-audio-analysis/target/debug"
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/test"
 	],
 	"file_history":
 	[
+		"/C/Users/tzaeru/AppData/Local/Temp/scp49526/home/tzaeru/backend2/server-vote/vote_models.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp50526/home/tzaeru/backend2/server-vote/vote_controllers.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp13593/home/1/tzaeru/sites/princess_grape.png",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp13293/home/1/tzaeru/sites/pissakakki.png",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp49404/home/tzaeru/backend2/server-vote/streamr_services.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp02970/home/tzaeru/backend2/server-vote/vote_routes.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp12718/home/tzaeru/backend2/server-vote/client-templates/client/js/streams.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp14159/home/tzaeru/backend2/server-vote/client-templates/client/js/streamr-client.js",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp12262/home/tzaeru/backend2/server-vote/client-templates/client/settings.json",
+		"/C/Users/tzaeru/AppData/Local/Temp/scp12390/home/tzaeru/backend2/server-vote/streamr_templates/canvas_template.json",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/client_test/main.rs",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/server/main.rs",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/pa_interface.rs",
+		"/C/Users/tzaeru/AppData/Roaming/Sublime Text 3/Installed Packages/Package Control.sublime-package",
+		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/lib.rs",
 		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/bin/client.rs",
 		"/C/Users/tzaeru/Documents/rust-audio-analysis/src/bin/server.rs",
 		"/C/Users/tzaeru/AppData/Roaming/Sublime Text 3/Packages/User/Rust.sublime-settings",
@@ -678,22 +716,7 @@
 		"/C/Users/tzaeru/AppData/Local/Temp/scp04199/home/tzaeru/uplause_server/uplause-server-user/user-routes.js",
 		"/C/Users/tzaeru/AppData/Local/Temp/scp54047/home/tzaeru/uplause_server/uplause-server-vote/vote_routes.js",
 		"/C/Users/tzaeru/AppData/Local/Temp/scp30359/home/tzaeru/uplause_server/uplause-server-vote/streamr_templates/canvas_template.json",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp54836/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
-		"/F/BroswerDownloads/node_parse_task_final/node_parse_task/api_services.js",
-		"/F/BroswerDownloads/solved_tasks/solved_tasks/api_services.js",
-		"/F/BroswerDownloads/node_parse_task_done/node_parse_task/api_services.js",
-		"/F/BroswerDownloads/uplause/uplause/api_services.js",
-		"/F/BroswerDownloads/uplause/uplause/main.js",
-		"/F/BroswerDownloads/node_parse_task_done/node_parse_task/routes.js",
-		"/F/BroswerDownloads/node_parse_task/node_parse_task/package.json",
-		"/F/BroswerDownloads/node_parse_task/node_parse_task/routes.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp46772/home/tzaeru/jot.txt",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp44198/home/tzaeru/uplause_server/uplause-server-logging/logging_controllers.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp46204/home/tzaeru/uplause_server/uplause-server-logging/logging_routes.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp56226/home/tzaeru/uplause_server/uplause-server-vote/vote_routes.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp56526/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp39585/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js",
-		"/C/Users/tzaeru/AppData/Local/Temp/scp39581/home/tzaeru/uplause_server/uplause-server-vote/vote_models.js"
+		"/C/Users/tzaeru/AppData/Local/Temp/scp54836/home/tzaeru/uplause_server/uplause-server-vote/vote_controllers.js"
 	],
 	"find":
 	{
@@ -712,6 +735,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"control_stream_id",
+			"vote_stream_auth",
+			"vote.vote_stream_auth",
+			"create_vote_config_file",
 			"get_db_from_rms",
 			"20",
 			"en",
@@ -835,11 +862,7 @@
 			"world_cons",
 			"world_generat",
 			");\n",
-			"GL_",
-			"windowEvent",
-			"render",
-			"win",
-			"fps"
+			"GL_"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -858,7 +881,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -867,15 +890,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 146,
+						"buffer_size": 328,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								145,
-								145
+								163,
+								163
 							]
 						],
 						"settings":
@@ -886,24 +909,52 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/server/main.rs",
+					"file": "rust-audio-analysis.sublime-project",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 157,
+						"buffer_size": 202,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								157,
-								157
+								177,
+								177
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/lib.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 88,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4,
+								4
 							]
 						],
 						"settings":
@@ -914,24 +965,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "src/client_test/main.rs",
+					"buffer": 3,
+					"file": "src/test/main.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 157,
+						"buffer_size": 301,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11,
-								11
+								38,
+								38
 							]
 						],
 						"settings":
@@ -946,12 +997,42 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "src/lib.rs",
+					"buffer": 4,
+					"file": "src/analysis/pa_interface.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 65,
+						"buffer_size": 4888,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								605,
+								605
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/analysis/mod.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21,
 						"regions":
 						{
 						},
@@ -964,41 +1045,14 @@
 						],
 						"settings":
 						{
+							"auto_name": "mod pa_interface;",
 							"syntax": "Packages/Rust/Rust.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "rust-audio-analysis.sublime-project",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 70,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								59,
-								59
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1037,7 +1091,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 175.0
+		"height": 323.0
 	},
 	"output.find_results":
 	{
@@ -1047,7 +1101,7 @@
 	{
 		"height": 118.0
 	},
-	"pinned_build_system": "Packages/Rust/Cargo.sublime-build",
+	"pinned_build_system": "RAA",
 	"project": "rust-audio-analysis.sublime-project",
 	"replace":
 	{

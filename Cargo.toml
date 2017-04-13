@@ -5,6 +5,8 @@ authors = ["tzaeru <tzaeru@gmail.com>"]
 
 [dependencies]
 portaudio = "0.7.0"
+dsp-chain = "*"
+lazy_static = "0.2"
 
 [[bin]]
 name = "server"

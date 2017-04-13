@@ -3,7 +3,11 @@
 //! Audio from the default input device is passed directly to the default output device in a duplex
 //! stream, so beware of feedback!
 
+extern crate dsp;
 extern crate portaudio as pa;
+
+use self::dsp::{Graph, Node, Frame, FromSample, Sample, Walker};
+use self::dsp::sample::ToFrameSliceMut;
 
 const SAMPLE_RATE: f64 = 44_100.0;
 const FRAMES: u32 = 256;
@@ -11,32 +15,72 @@ const CHANNELS: i32 = 2;
 const INTERLEAVED: bool = true;
 
 
-/*fn main() {
-    run().unwrap()
-}*/
+lazy_static! {
+    static ref port_audio: pa::PortAudio = {
+        let pa = pa::PortAudio::new();
+        match pa
+        {
+            Result::Ok(val) => val,
+            Result::Err(err) =>
+              panic!("called `Result::unwrap()` on an `Err` value: {:?}", err),
+        }
+    };
+}
+
+#[derive(Debug)]
+pub struct PANode {
+    pub last_buffer: Vec<f32>
+}
+
+impl PANode {
+    pub fn new() -> PANode {
+        let pa_node = PANode {
+            last_buffer: Vec::new()
+        };
+
+        return pa_node;
+    }
+
+    pub fn open_stream() {
+
+    }
+
+    pub fn callback(pa::DuplexStreamCallbackArgs { in_buffer, out_buffer, frames, time, .. }: pa::DuplexStreamCallbackArgs<f32, f32>) -> pa::stream::CallbackResult {
+        pa::Continue
+    }
+}
+
+impl <F> dsp::Node<F> for PANode  where F: Frame {
+    fn audio_requested(&mut self, buffer: &mut [F], sample_hz: f64) {
+
+    }
+}
+
+pub fn init()
+{
+
+}
 
 pub fn run() -> Result<(), pa::Error> {
 
-    let pa = try!(pa::PortAudio::new());
-
     println!("PortAudio:");
-    println!("version: {}", pa.version());
-    println!("version text: {:?}", pa.version_text());
-    println!("host count: {}", try!(pa.host_api_count()));
+    println!("version: {}", port_audio.version());
+    println!("version text: {:?}", port_audio.version_text());
+    println!("host count: {}", try!(port_audio.host_api_count()));
 
-    let default_host = try!(pa.default_host_api());
-    println!("default host: {:#?}", pa.host_api_info(default_host));
+    let default_host = try!(port_audio.default_host_api());
+    println!("default host: {:#?}", port_audio.host_api_info(default_host));
 
-    let def_input = try!(pa.default_input_device());
-    let input_info = try!(pa.device_info(def_input));
+    let def_input = try!(port_audio.default_input_device());
+    let input_info = try!(port_audio.device_info(def_input));
     println!("Default input device info: {:#?}", &input_info);
 
     // Construct the input stream parameters.
     let latency = input_info.default_low_input_latency;
     let input_params = pa::StreamParameters::<f32>::new(def_input, CHANNELS, INTERLEAVED, latency);
 
-    let def_output = try!(pa.default_output_device());
-    let output_info = try!(pa.device_info(def_output));
+    let def_output = try!(port_audio.default_output_device());
+    let output_info = try!(port_audio.device_info(def_output));
     println!("Default output device info: {:#?}", &output_info);
 
     // Construct the output stream parameters.
@@ -44,13 +88,13 @@ pub fn run() -> Result<(), pa::Error> {
     let output_params = pa::StreamParameters::new(def_output, CHANNELS, INTERLEAVED, latency);
 
     // Check that the stream format is supported.
-    try!(pa.is_duplex_format_supported(input_params, output_params, SAMPLE_RATE));
+    try!(port_audio.is_duplex_format_supported(input_params, output_params, SAMPLE_RATE));
 
     // Construct the settings with which we'll open our duplex stream.
     let settings = pa::DuplexStreamSettings::new(input_params, output_params, SAMPLE_RATE, FRAMES);
 
     // Once the countdown reaches 0 we'll close the stream.
-    let mut count_down = 3.0;
+    let mut count_down = 1.0;
 
     // Keep track of the last `current_time` so we can calculate the delta time.
     let mut maybe_last_time = None;
@@ -78,7 +122,7 @@ pub fn run() -> Result<(), pa::Error> {
     };
 
     // Construct a stream with input and output sample types of f32.
-    let mut stream = try!(pa.open_non_blocking_stream(settings, callback));
+    let mut stream = try!(port_audio.open_non_blocking_stream(settings, callback));
 
     try!(stream.start());
 
@@ -93,6 +137,7 @@ pub fn run() -> Result<(), pa::Error> {
     }
 
     try!(stream.stop());
+
 
     Ok(())
 }

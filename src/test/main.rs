@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate lazy_static;
+
 extern crate audio_analysis;
 use audio_analysis::analysis;
 
