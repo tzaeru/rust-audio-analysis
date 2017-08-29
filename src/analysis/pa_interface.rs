@@ -3,11 +3,9 @@
 //! Audio from the default input device is passed directly to the default output device in a duplex
 //! stream, so beware of feedback!
 
-extern crate dsp;
 extern crate portaudio as pa;
 
-use self::dsp::{Graph, Node, Frame, FromSample, Sample, Walker};
-use self::dsp::sample::ToFrameSliceMut;
+use std::collections::HashMap;
 
 const SAMPLE_RATE: f64 = 44_100.0;
 const FRAMES: u32 = 256;
@@ -27,38 +25,27 @@ lazy_static! {
     };
 }
 
-#[derive(Debug)]
-pub struct PANode {
-    pub last_buffer: Vec<f32>
-}
-
-impl PANode {
-    pub fn new() -> PANode {
-        let pa_node = PANode {
-            last_buffer: Vec::new()
-        };
-
-        return pa_node;
-    }
-
-    pub fn open_stream() {
-
-    }
-
-    pub fn callback(pa::DuplexStreamCallbackArgs { in_buffer, out_buffer, frames, time, .. }: pa::DuplexStreamCallbackArgs<f32, f32>) -> pa::stream::CallbackResult {
-        pa::Continue
-    }
-}
-
-impl <F> dsp::Node<F> for PANode  where F: Frame {
-    fn audio_requested(&mut self, buffer: &mut [F], sample_hz: f64) {
-
-    }
-}
-
 pub fn init()
 {
 
+}
+
+pub fn get_devices<'a>() -> Result<HashMap<&'a str, i32>, pa::Error> {
+    let mut devices = HashMap::new();
+
+    let default_host = try!(port_audio.default_host_api());
+
+    for i in 0..port_audio.host_api_info(default_host).unwrap().device_count
+    {
+        let device_index = try!(port_audio.api_device_index_to_device_index(default_host, i as i32));
+        let device = try!(port_audio.default_input_device());
+        let input_info = try!(port_audio.device_info(device));
+
+        devices.insert(input_info.name, 
+            input_info.max_input_channels);
+    }
+
+    return Ok(devices);
 }
 
 pub fn run() -> Result<(), pa::Error> {

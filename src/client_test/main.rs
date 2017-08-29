@@ -1,6 +1,14 @@
-fn main() {
-    // The statements here will be executed when the compiled binary is called
+use std::io::prelude::*;
+use std::net::TcpStream;
 
-    // Print text to the console
-    println!("Hello World2!");
+fn main() {
+	if let Ok(stream) = TcpStream::connect("127.0.0.1:8001") {
+	    println!("Connected to the server!");
+
+        loop {
+            
+        }
+	} else {
+	    println!("Couldn't connect to server...");
+	}
 }

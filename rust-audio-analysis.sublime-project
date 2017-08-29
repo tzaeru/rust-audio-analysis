@@ -1,19 +1,27 @@
 {
 	"build_systems":
 	[
+		{
+			"cmd":
+			[
+				"cargo",
+				"run",
+				"--bin",
+				"client-test"
+			],
+			"name": "RAA"
+		},
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"python\" -u \"$file\""
+		}
 	],
 	"folders":
 	[
 		{
 			"path": "."
 		}
-	],
-
-	"build_systems":
-    [
-        {
-            "name": "RAA",
-            "cmd": ["cargo", "run", "--bin", "test"]
-        }
-    ]
+	]
 }
