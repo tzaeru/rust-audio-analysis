@@ -2,6 +2,7 @@
 extern crate lazy_static;
 
 pub mod analysis;
+pub mod server;
 
 /*#[cfg(test)]
 mod tests {

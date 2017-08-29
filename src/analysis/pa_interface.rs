@@ -30,7 +30,7 @@ pub fn init()
 
 }
 
-pub fn get_devices<'a>() -> Result<HashMap<&'a str, i32>, pa::Error> {
+pub fn get_devices<'a>() -> Result<HashMap<i32, (&'a str, i32)>, pa::Error> {
     let mut devices = HashMap::new();
 
     let default_host = try!(port_audio.default_host_api());
@@ -38,11 +38,10 @@ pub fn get_devices<'a>() -> Result<HashMap<&'a str, i32>, pa::Error> {
     for i in 0..port_audio.host_api_info(default_host).unwrap().device_count
     {
         let device_index = try!(port_audio.api_device_index_to_device_index(default_host, i as i32));
-        let device = try!(port_audio.default_input_device());
-        let input_info = try!(port_audio.device_info(device));
+        let input_info = try!(port_audio.device_info(device_index));
 
-        devices.insert(input_info.name, 
-            input_info.max_input_channels);
+        devices.insert(device_index.0 as i32, (input_info.name, 
+            input_info.max_input_channels));
     }
 
     return Ok(devices);
