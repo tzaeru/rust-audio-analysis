@@ -1,8 +1,12 @@
 use std::net::{TcpListener, TcpStream};
 
+use std::io::Write;
+
 extern crate audio_analysis;
 use audio_analysis::analysis;
 use audio_analysis::server::messages;
+
+use audio_analysis::server::messages::Serializable;
 
 fn handle_client(stream: TcpStream) {
     // ...
@@ -16,13 +20,17 @@ fn main() {
 
     loop {
         match listener.accept() {
-            Ok((_socket, addr)) => {
+            Ok((mut _socket, addr)) => {
                 println!("new client: {:?}", addr);
-                conn_streams.push(_socket);
-
+                
                 let mut devices = analysis::pa_interface::get_devices();
                 let mut device_msg = messages::MsgDevicesList::new();
                 device_msg.devices = devices.unwrap();
+
+                let mut serialized = device_msg.serialize();
+                let _ = _socket.write(serialized.as_mut_slice());
+
+                conn_streams.push(_socket);
             },
             Err(e) => {
                 
