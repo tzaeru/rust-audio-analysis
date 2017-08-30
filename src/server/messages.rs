@@ -59,7 +59,7 @@ impl <'a>MsgDevicesList<'a> {
     		data = data[4..].to_vec();
     		println!("Name length: {}", device_name_length);
 
-    		let data_clone = &data.clone();
+    		let data_clone = data.clone();
     		let device_name = str::from_utf8(&data_clone[..device_name_length as usize]).unwrap();
     		println!("Name: {}", device_name);
 
@@ -90,9 +90,11 @@ impl<'a> Serializable for MsgDevicesList<'a>
 			let id_bytes: [u8; 4] = unsafe { transmute(id.to_be()) };
 			device_bytes.extend(id_bytes.iter().cloned());
 
-			let name_length: [u8; 4] = unsafe { transmute(name_and_channels.0.len().to_be() as i32) };
+			let name_length: [u8; 4] = unsafe { transmute((name_and_channels.0.as_bytes().len() as i32).to_be() as i32) };
 			device_bytes.extend(name_length.iter().cloned());
 			device_bytes.extend(name_and_channels.0.as_bytes());
+			println!("Serializing device, name: {} Length: {}", name_and_channels.0, name_and_channels.0.as_bytes().len());
+			println!("Name bytes: {:?}", name_length);
 
 			let channel_bytes: [u8; 4] = unsafe { transmute(name_and_channels.1.to_be()) };
 			device_bytes.extend(channel_bytes.iter().cloned());
@@ -101,6 +103,7 @@ impl<'a> Serializable for MsgDevicesList<'a>
 		let length_bytes: [u8; 4] = unsafe { transmute(((4 + 4 + device_bytes.len()) as i32).to_be()) };
 		bytes.extend(length_bytes.iter().cloned());
 		bytes.extend(type_bytes.iter().cloned());
+		bytes.extend(device_count_bytes.iter().cloned());
 		bytes.extend(device_bytes.iter().cloned());
 		bytes
 	}

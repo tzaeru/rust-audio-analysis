@@ -16,7 +16,8 @@ fn main() {
             println!("Result length: {:?}", result.unwrap());
             println!("Length: {}", length);
 
-            let _ = messages::MsgDevicesList::deserialized(data[4..].to_vec());
+            // Skip message length and type (WIP)
+            let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
         }
 	} else {
 	    println!("Couldn't connect to server...");
