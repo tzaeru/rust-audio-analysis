@@ -47,6 +47,45 @@ pub fn get_devices<'a>() -> Result<HashMap<i32, (&'a str, i32)>, pa::Error> {
     return Ok(devices);
 }
 
+pub fn get_rms(device: i32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error> {
+    let device_info = try!(port_audio.device_info(pa::DeviceIndex{0: device as u32}));
+
+    let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: device as u32},
+        device_info.max_input_channels,
+        INTERLEAVED,
+        0.0f64);
+
+    let audio_callback = move |pa::InputStreamCallbackArgs { buffer, frames, time, .. }| {
+        //let current_time = time.current;
+
+        let mut square_sum = 0.0f32;
+        for x in 0..buffer.len()
+        {
+            square_sum += buffer[x] * buffer[x];
+        }
+
+        let square_mean = square_sum * 1.0f32/buffer.len() as f32;
+
+        let rms = f32::sqrt(square_mean);
+
+        println!("Total rms: {}", rms);
+
+        assert!(frames == FRAMES as usize);
+
+        pa::Continue
+    };
+
+    let settings = pa::InputStreamSettings::new(input_params, SAMPLE_RATE, FRAMES);
+    let mut stream = try!(port_audio.open_non_blocking_stream(settings, audio_callback));
+    println!("Starting stream..");
+    try!(stream.start());
+
+    while let true = try!(stream.is_active()) {
+        }
+
+    port_audio.is_input_format_supported(input_params, SAMPLE_RATE)
+}
+
 pub fn run() -> Result<(), pa::Error> {
 
     println!("PortAudio:");
