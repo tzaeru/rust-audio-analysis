@@ -6,11 +6,14 @@
 extern crate portaudio as pa;
 
 use std::collections::HashMap;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 const SAMPLE_RATE: f64 = 44_100.0;
 const FRAMES: u32 = 256;
 const CHANNELS: i32 = 2;
 const INTERLEAVED: bool = true;
+
 
 
 lazy_static! {
@@ -23,6 +26,67 @@ lazy_static! {
               panic!("called `Result::unwrap()` on an `Err` value: {:?}", err),
         }
     };
+}
+
+struct AArena{
+    pub sourcables: HashMap<u64, Box<Sourcable>>,
+    pub chainables: HashMap<u64, Box<Chainable>>
+}
+
+trait Sourcable {
+    fn start(&self, chain: Rc<RefCell<AChain>>);
+    fn stop(&self);
+}
+
+trait Chainable {
+
+}
+
+struct AChain {
+    arena: Rc<AArena>,
+
+    source: u64,
+    nodes: Vec<u64>,
+}
+
+impl AChain {
+    pub fn source_cb(&self, buffer: &[f32], frames: usize)
+    {
+        for i in 0..self.nodes.len()
+        {
+
+        }
+    }
+}
+
+struct PASource {
+    device: u32,
+    channels: Vec<u32>,
+}
+
+impl Sourcable for PASource {
+    fn start(&self, chain: Rc<RefCell<AChain>>) -> () {
+        let device_info = port_audio.device_info(pa::DeviceIndex{0: self.device}).unwrap();
+
+        let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: self.device},
+            device_info.max_input_channels,
+            false,
+            0.0f64);
+
+
+        let audio_callback = move |pa::InputStreamCallbackArgs {mut buffer, frames, time, .. }| {
+            (*chain.borrow_mut()).source_cb(buffer, frames);
+
+            pa::Continue
+        };
+
+        let settings = pa::InputStreamSettings::new(input_params, SAMPLE_RATE, FRAMES);
+        let mut stream = port_audio.open_non_blocking_stream(settings, audio_callback).unwrap();
+        println!("Starting stream..");
+        let _ = stream.start();
+    }
+    fn stop(&self) -> () {
+    }
 }
 
 pub fn init()
@@ -47,17 +111,17 @@ pub fn get_devices<'a>() -> Result<HashMap<i32, (&'a str, i32)>, pa::Error> {
     return Ok(devices);
 }
 
-pub fn get_rms(device: i32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error> {
-    let device_info = try!(port_audio.device_info(pa::DeviceIndex{0: device as u32}));
+// WIP. Opens stream and all that. Not part of the proper analysis chain structure.
+pub fn get_rms(device: u32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error> {
+    let device_info = try!(port_audio.device_info(pa::DeviceIndex{0: device}));
 
-    let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: device as u32},
+    let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: device},
         device_info.max_input_channels,
-        INTERLEAVED,
+        false,
         0.0f64);
 
-    let audio_callback = move |pa::InputStreamCallbackArgs { buffer, frames, time, .. }| {
+    let audio_callback = move |pa::InputStreamCallbackArgs {mut buffer, frames, time, .. }| {
         //let current_time = time.current;
-
         let mut square_sum = 0.0f32;
         for x in 0..buffer.len()
         {
@@ -81,11 +145,13 @@ pub fn get_rms(device: i32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error
     try!(stream.start());
 
     while let true = try!(stream.is_active()) {
-        }
+
+    }
 
     port_audio.is_input_format_supported(input_params, SAMPLE_RATE)
 }
 
+// Test function, please ignore.
 pub fn run() -> Result<(), pa::Error> {
 
     println!("PortAudio:");
