@@ -108,3 +108,63 @@ impl<'a> Serializable for MsgDevicesList<'a>
 		bytes
 	}
 }
+
+pub struct MsgStartStreamRMS
+{
+    pub msg_type: MsgType,
+    pub device: i32,
+    pub channels: Vec<i32>,
+}
+
+impl MsgStartStreamRMS {
+    pub fn new() -> MsgStartStreamRMS {
+        MsgStartStreamRMS { msg_type: MsgType::MSG_GET_RMS, device: 0, channels: Vec::new() }
+    }
+
+    pub fn deserialized(mut data: Vec<u8>) -> MsgStartStreamRMS {
+        let mut start_msg = MsgStartStreamRMS { msg_type: MsgType::MSG_GET_RMS, device: 0, channels: Vec::new() };
+
+        start_msg.device = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+
+        data = data[4..].to_vec();
+
+        let channel_count = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+        data = data[4..].to_vec();
+
+        for _ in 0..channel_count
+        {
+            let channel_id: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+            data = data[4..].to_vec();
+
+            start_msg.channels.push(channel_id);
+        }
+
+        start_msg
+    }
+}
+
+impl Serializable for MsgStartStreamRMS
+{
+    fn serialize(&self) -> Vec<u8>
+    {
+        let mut bytes = Vec::new();
+
+        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_be()) };
+        let device_bytes: [u8; 4] = unsafe { transmute((self.device.clone() as i32).to_be()) };
+
+        let mut channels_bytes = Vec::new();
+        for i in 0..self.channels.len()
+        {
+            let channel_bytes: [u8; 4] = unsafe { transmute(self.channels[i].to_be()) };
+            channels_bytes.extend(channel_bytes.iter().cloned());
+        }
+
+        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + channels_bytes.len() as i32).to_be())};
+        bytes.extend(length_bytes.iter().cloned());
+        bytes.extend(type_bytes.iter().cloned());
+        bytes.extend(device_bytes.iter().cloned());
+        bytes.extend(channels_bytes.iter().cloned());
+
+        bytes
+    }
+}

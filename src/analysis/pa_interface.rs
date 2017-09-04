@@ -9,6 +9,9 @@ use std::collections::HashMap;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use std::sync::Arc;
+use std::sync::RwLock;
+
 const SAMPLE_RATE: f64 = 44_100.0;
 const FRAMES: u32 = 256;
 const CHANNELS: i32 = 2;
@@ -28,64 +31,192 @@ lazy_static! {
     };
 }
 
-struct AArena{
-    pub sourcables: HashMap<u64, Box<Sourcable>>,
-    pub chainables: HashMap<u64, Box<Chainable>>
+pub struct AArena{
+    pub sourcables: HashMap<u64, Arc<RefCell<Sourcable>>>,
+    pub chainables: HashMap<u64, Arc<RwLock<Chainable>>>,
+
+    created_nodes: u64,
 }
 
-trait Sourcable {
-    fn start(&self, chain: Rc<RefCell<AChain>>);
+impl AArena{
+    pub fn new() -> AArena {
+        AArena
+        {
+            sourcables: HashMap::new(),
+            chainables: HashMap::new(),
+            created_nodes: 0,
+        }
+    }
+
+    pub fn add_sourcable(&mut self, sourcable: Arc<RefCell<Sourcable>>) -> u64
+    {
+        let id = self.created_nodes;
+
+        self.sourcables.insert(id, sourcable);
+        self.created_nodes += 1;
+
+        return id;
+    }
+
+    pub fn add_chainable(&mut self, chainable: Arc<RwLock<Chainable>>) -> u64
+    {
+        let id = self.created_nodes;
+
+        self.chainables.insert(id, chainable);
+        self.created_nodes += 1;
+
+        return id;
+    }
+}
+
+pub trait Sourcable {
+    fn start(&mut self, chain: Rc<AChain>);
     fn stop(&self);
 }
 
-trait Chainable {
-
+pub trait Chainable {
+    fn update(&mut self, buffer: &[f32]);
+    fn output(&self) -> &[f32];
 }
 
-struct AChain {
+pub struct AChain {
     arena: Rc<AArena>,
 
-    source: u64,
+    source: Option<u64>,
     nodes: Vec<u64>,
 }
 
 impl AChain {
+    pub fn new(arena: Rc<AArena>) -> AChain
+    {
+        AChain
+        {
+            arena: arena,
+
+            source: Option::None,
+            nodes: Vec::new(),
+        }
+    }
+
+
+    pub fn start(&self, self_ref: Rc<AChain>)
+
+    {
+        match self.source {
+            Some(source) => self.arena.sourcables[&source].borrow_mut().start(self_ref),
+            None    => println!("No sourcable set."),
+        }
+    }
+
     pub fn source_cb(&self, buffer: &[f32], frames: usize)
     {
+        println!("Got callback?");
+
         for i in 0..self.nodes.len()
         {
+            let node = &self.arena.chainables[&self.nodes[i]];
+            node.write().unwrap().update(buffer);
+        }
+    }
 
+    pub fn set_source(&mut self, source:u64)
+    {
+        self.source = Option::Some(source);
+    }
+
+    pub fn add_node(&mut self, node:u64)
+    {
+        self.nodes.push(node);
+    }
+}
+
+pub struct PASource {
+    device: u32,
+    channels: Vec<u32>,
+
+    stream: Option<pa::Stream<pa::NonBlocking, pa::Input<f32>>>,
+}
+
+impl PASource {
+    pub fn new(device: u32, channels: Vec<u32>) -> PASource
+    {
+        PASource
+        {
+            device: device,
+            channels: channels,
+
+            stream: Option::None,
         }
     }
 }
 
-struct PASource {
-    device: u32,
-    channels: Vec<u32>,
-}
-
 impl Sourcable for PASource {
-    fn start(&self, chain: Rc<RefCell<AChain>>) -> () {
+
+    fn start(&mut self, chain: Rc<AChain>) -> () {
         let device_info = port_audio.device_info(pa::DeviceIndex{0: self.device}).unwrap();
 
         let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: self.device},
             device_info.max_input_channels,
-            false,
+            INTERLEAVED,
             0.0f64);
 
 
         let audio_callback = move |pa::InputStreamCallbackArgs {mut buffer, frames, time, .. }| {
-            (*chain.borrow_mut()).source_cb(buffer, frames);
+            println!("Got callback?");
+            chain.source_cb(buffer, frames);
 
             pa::Continue
         };
-
+//pa::input<f32>, pa::NonBlocking
         let settings = pa::InputStreamSettings::new(input_params, SAMPLE_RATE, FRAMES);
         let mut stream = port_audio.open_non_blocking_stream(settings, audio_callback).unwrap();
-        println!("Starting stream..");
-        let _ = stream.start();
+        println!("Starting stream for realz..");
+        
+        stream.start();
+
+        self.stream = Option::Some(stream);
     }
     fn stop(&self) -> () {
+    }
+}
+
+pub struct RMS {
+    buffer: Vec<f32>,
+}
+
+impl RMS {
+    pub fn new() -> RMS
+    {
+        RMS
+        {
+            buffer: Vec::new(),
+        }
+    }
+}
+
+impl Chainable for RMS {
+    fn update(&mut self, buffer: &[f32])
+    {
+        self.buffer = Vec::new();
+
+        let mut square_sum = 0.0f32;
+        for x in 0..buffer.len()
+        {
+            square_sum += buffer[x] * buffer[x];
+        }
+
+        let square_mean = square_sum * 1.0f32/buffer.len() as f32;
+
+        let rms = f32::sqrt(square_mean);
+
+        
+
+        self.buffer.push(rms);
+    }
+
+    fn output(&self) -> &[f32]
+    {
+        &self.buffer
     }
 }
 
@@ -117,7 +248,7 @@ pub fn get_rms(device: u32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error
 
     let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex{0: device},
         device_info.max_input_channels,
-        false,
+        INTERLEAVED,
         0.0f64);
 
     let audio_callback = move |pa::InputStreamCallbackArgs {mut buffer, frames, time, .. }| {
