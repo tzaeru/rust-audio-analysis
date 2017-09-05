@@ -15,9 +15,9 @@ fn request_rms(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 }
 
 fn main() {
-	if let Ok(mut stream) = TcpStream::connect("127.0.0.1:8001") {
+	if let Ok(mut stream) = TcpStream::connect("127.0.0.1:50000") {
 	    println!("Connected to the server!");
-
+        let _ = request_rms(&stream);
         loop {
         	let mut data = [0u8; 2048];
             match stream.read(&mut data)
@@ -28,16 +28,20 @@ fn main() {
                         continue;
                     }
 
-                    let length: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+                    println!("Got msg.");
+
+                    let length: i32 = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32)  << 16) | ((data[3] as i32) << 24);
                     println!("Result length: {:?}", result);
                     println!("Length: {}", length);
 
                     // Skip message length and type (WIP)
-                    let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
+                    //let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
 
-                    let _ = request_rms(&stream);
+                    
                 },
-                Err(..) => {}
+                Err(e) => {
+                    println!("Error terror, {}", e);
+                }
             }
         }
 	} else {

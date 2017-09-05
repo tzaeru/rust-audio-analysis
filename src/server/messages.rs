@@ -4,14 +4,14 @@ use std::str;
 
 #[derive(Clone)]
 pub enum MsgType {
-	MSG_GET_RMS = 0,
-	MSG_RMS_PACKET = 1,
-	MSG_GET_DEVICES = 2,
-	MSG_SET_FLOAT_PARAM = 3,
-	MSG_DEVICES_LIST = 4,
-	MSG_DB_PACKET = 5,
-	MSG_SET_BOOLEAN_PARAM = 6,
-	MSG_CONFIGUREDB = 7,
+    MSG_GET_RMS = 0,
+    MSG_RMS_PACKET = 1,
+    MSG_GET_DEVICES = 2,
+    MSG_SET_FLOAT_PARAM = 3,
+    MSG_DEVICES_LIST = 4,
+    MSG_DB_PACKET = 5,
+    MSG_SET_BOOLEAN_PARAM = 6,
+    MSG_CONFIGUREDB = 7,
 }
 
 pub trait Serializable {
@@ -19,98 +19,110 @@ pub trait Serializable {
 }
 
 
-pub struct MsgGetDevices
-{
-	pub msg_type: MsgType,
+pub struct MsgGetDevices {
+    pub msg_type: MsgType,
 }
 
 impl MsgGetDevices {
-	pub fn new() -> MsgGetDevices {
+    pub fn new() -> MsgGetDevices {
         MsgGetDevices { msg_type: MsgType::MSG_GET_DEVICES }
     }
 }
 
 pub struct MsgDevicesList<'a> {
-	pub msg_type: MsgType,
-	pub devices: HashMap<i32, (&'a str, i32)>,
+    pub msg_type: MsgType,
+    pub devices: HashMap<i32, (&'a str, i32)>,
 }
 
-impl <'a>MsgDevicesList<'a> {
-	pub fn new() -> MsgDevicesList<'a> {
-        MsgDevicesList { msg_type: MsgType::MSG_DEVICES_LIST, devices: HashMap::new() }
+impl<'a> MsgDevicesList<'a> {
+    pub fn new() -> MsgDevicesList<'a> {
+        MsgDevicesList {
+            msg_type: MsgType::MSG_DEVICES_LIST,
+            devices: HashMap::new(),
+        }
     }
 
     pub fn deserialized(mut data: Vec<u8>) -> MsgDevicesList<'a> {
-    	let mut devices_list_msg = MsgDevicesList { msg_type: MsgType::MSG_DEVICES_LIST, devices: HashMap::new() };
+        let mut devices_list_msg = MsgDevicesList {
+            msg_type: MsgType::MSG_DEVICES_LIST,
+            devices: HashMap::new(),
+        };
 
-    	let device_amount: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+        let device_amount: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
+                                 ((data[2] as i32) << 16) |
+                                 ((data[3] as i32) << 24);
 
-    	println!("Device amount: {}", device_amount);
+        println!("Device amount: {}", device_amount);
 
-    	data = data[4..].to_vec();
+        data = data[4..].to_vec();
 
-    	for _ in 0..device_amount
-    	{
-    		let device_id: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
-    		data = data[4..].to_vec();
-    		println!("ID: {}", device_id);
+        for _ in 0..device_amount {
+            let device_id: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
+                                 ((data[2] as i32) << 16) |
+                                 ((data[3] as i32) << 24);
+            data = data[4..].to_vec();
+            println!("ID: {}", device_id);
 
-    		let device_name_length: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
-    		data = data[4..].to_vec();
-    		println!("Name length: {}", device_name_length);
+            let device_name_length: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
+                                          ((data[2] as i32) << 16) |
+                                          ((data[3] as i32) << 24);
+            data = data[4..].to_vec();
+            println!("Name length: {}", device_name_length);
 
-    		let data_clone = data.clone();
-    		let device_name = str::from_utf8(&data_clone[..device_name_length as usize]).unwrap();
-    		println!("Name: {}", device_name);
+            let data_clone = data.clone();
+            let device_name = str::from_utf8(&data_clone[..device_name_length as usize]).unwrap();
+            println!("Name: {}", device_name);
 
-    		data = data[device_name_length as usize..].to_vec();
+            data = data[device_name_length as usize..].to_vec();
 
-    		let device_channels = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
-    		data = data[4..].to_vec();
-    		println!("Channels: {}", device_channels);
-    	}
+            let device_channels = data[0] as i32 | ((data[1] as i32) << 8) |
+                                  ((data[2] as i32) << 16) |
+                                  ((data[3] as i32) << 24);
+            data = data[4..].to_vec();
+            println!("Channels: {}", device_channels);
+        }
 
-    	devices_list_msg
+        devices_list_msg
     }
 }
 
-impl<'a> Serializable for MsgDevicesList<'a>
-{
-	fn serialize(&self) -> Vec<u8>
-	{
-		let mut bytes = Vec::new();
+impl<'a> Serializable for MsgDevicesList<'a> {
+    fn serialize(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
 
-		let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_be()) };
-		
-		let device_count_bytes: [u8; 4] = unsafe { transmute((self.devices.len() as i32).to_be()) };
+        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
 
-		let mut device_bytes = Vec::new();
-		for (id, name_and_channels) in &self.devices
-		{
-			let id_bytes: [u8; 4] = unsafe { transmute(id.to_be()) };
-			device_bytes.extend(id_bytes.iter().cloned());
+        let device_count_bytes: [u8; 4] = unsafe { transmute((self.devices.len() as i32).to_le()) };
 
-			let name_length: [u8; 4] = unsafe { transmute((name_and_channels.0.as_bytes().len() as i32).to_be() as i32) };
-			device_bytes.extend(name_length.iter().cloned());
-			device_bytes.extend(name_and_channels.0.as_bytes());
-			println!("Serializing device, name: {} Length: {}", name_and_channels.0, name_and_channels.0.as_bytes().len());
-			println!("Name bytes: {:?}", name_length);
+        let mut device_bytes = Vec::new();
+        for (id, name_and_channels) in &self.devices {
+            let id_bytes: [u8; 4] = unsafe { transmute(id.to_le()) };
+            device_bytes.extend(id_bytes.iter().cloned());
 
-			let channel_bytes: [u8; 4] = unsafe { transmute(name_and_channels.1.to_be()) };
-			device_bytes.extend(channel_bytes.iter().cloned());
-		}
+            let name_length: [u8; 4] =
+                unsafe { transmute((name_and_channels.0.as_bytes().len() as i32).to_le() as i32) };
+            device_bytes.extend(name_length.iter().cloned());
+            device_bytes.extend(name_and_channels.0.as_bytes());
+            println!("Serializing device, name: {} Length: {}",
+                     name_and_channels.0,
+                     name_and_channels.0.as_bytes().len());
+            println!("Name bytes: {:?}", name_length);
 
-		let length_bytes: [u8; 4] = unsafe { transmute(((4 + 4 + device_bytes.len()) as i32).to_be()) };
-		bytes.extend(length_bytes.iter().cloned());
-		bytes.extend(type_bytes.iter().cloned());
-		bytes.extend(device_count_bytes.iter().cloned());
-		bytes.extend(device_bytes.iter().cloned());
-		bytes
-	}
+            let channel_bytes: [u8; 4] = unsafe { transmute(name_and_channels.1.to_le()) };
+            device_bytes.extend(channel_bytes.iter().cloned());
+        }
+
+        let length_bytes: [u8; 4] =
+            unsafe { transmute(((4 + 4 + 4 + device_bytes.len()) as i32).to_le()) };
+        bytes.extend(length_bytes.iter().cloned());
+        bytes.extend(type_bytes.iter().cloned());
+        bytes.extend(device_count_bytes.iter().cloned());
+        bytes.extend(device_bytes.iter().cloned());
+        bytes
+    }
 }
 
-pub struct MsgStartStreamRMS
-{
+pub struct MsgStartStreamRMS {
     pub msg_type: MsgType,
     pub device: i32,
     pub channels: Vec<i32>,
@@ -118,22 +130,33 @@ pub struct MsgStartStreamRMS
 
 impl MsgStartStreamRMS {
     pub fn new() -> MsgStartStreamRMS {
-        MsgStartStreamRMS { msg_type: MsgType::MSG_GET_RMS, device: 0, channels: Vec::new() }
+        MsgStartStreamRMS {
+            msg_type: MsgType::MSG_GET_RMS,
+            device: 0,
+            channels: Vec::new(),
+        }
     }
 
     pub fn deserialized(mut data: Vec<u8>) -> MsgStartStreamRMS {
-        let mut start_msg = MsgStartStreamRMS { msg_type: MsgType::MSG_GET_RMS, device: 0, channels: Vec::new() };
+        let mut start_msg = MsgStartStreamRMS {
+            msg_type: MsgType::MSG_GET_RMS,
+            device: 0,
+            channels: Vec::new(),
+        };
 
-        start_msg.device = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+        start_msg.device = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
+                           ((data[3] as i32) << 24);
 
         data = data[4..].to_vec();
 
-        let channel_count = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+        let channel_count = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
+                            ((data[3] as i32) << 24);
         data = data[4..].to_vec();
 
-        for _ in 0..channel_count
-        {
-            let channel_id: i32 = data[3] as i32 | ((data[2] as i32) << 8) | ((data[1] as i32)  << 16) | ((data[0] as i32) << 24);
+        for _ in 0..channel_count {
+            let channel_id: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
+                                  ((data[2] as i32) << 16) |
+                                  ((data[3] as i32) << 24);
             data = data[4..].to_vec();
 
             start_msg.channels.push(channel_id);
@@ -143,27 +166,65 @@ impl MsgStartStreamRMS {
     }
 }
 
-impl Serializable for MsgStartStreamRMS
-{
-    fn serialize(&self) -> Vec<u8>
-    {
+impl Serializable for MsgStartStreamRMS {
+    fn serialize(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
 
-        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_be()) };
-        let device_bytes: [u8; 4] = unsafe { transmute((self.device.clone() as i32).to_be()) };
+        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
+        let device_bytes: [u8; 4] = unsafe { transmute((self.device.clone() as i32).to_le()) };
 
         let mut channels_bytes = Vec::new();
-        for i in 0..self.channels.len()
-        {
-            let channel_bytes: [u8; 4] = unsafe { transmute(self.channels[i].to_be()) };
+        for i in 0..self.channels.len() {
+            let channel_bytes: [u8; 4] = unsafe { transmute(self.channels[i].to_le()) };
             channels_bytes.extend(channel_bytes.iter().cloned());
         }
 
-        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + channels_bytes.len() as i32).to_be())};
+        let length_bytes: [u8; 4] =
+            unsafe { transmute((4 + 4 + channels_bytes.len() as i32).to_le()) };
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
         bytes.extend(device_bytes.iter().cloned());
         bytes.extend(channels_bytes.iter().cloned());
+
+        bytes
+    }
+}
+
+pub struct MsgRMSPacket {
+    pub msg_type: MsgType,
+    pub value: f32
+}
+
+impl MsgRMSPacket {
+    pub fn new() -> MsgRMSPacket {
+        MsgRMSPacket {
+            msg_type: MsgType::MSG_RMS_PACKET,
+            value: 0f32,
+        }
+    }
+
+    pub fn deserialized(mut data: Vec<u8>) -> MsgRMSPacket {
+        let mut start_msg = MsgRMSPacket {
+            msg_type: MsgType::MSG_RMS_PACKET,
+            value: 0f32,
+        };
+
+        start_msg
+    }
+}
+
+impl Serializable for MsgRMSPacket {
+    fn serialize(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+
+        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
+        let value_bytes: [u8; 4] = unsafe { transmute(self.value as f32) };
+        let length_bytes: [u8; 4] =
+            unsafe { transmute((4 + 4 + 4 as i32).to_le()) };
+
+        bytes.extend(length_bytes.iter().cloned());
+        bytes.extend(type_bytes.iter().cloned());
+        bytes.extend(value_bytes.iter().cloned());
 
         bytes
     }

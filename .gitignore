@@ -10,3 +10,5 @@ Cargo.lock
 
 *.sublime-project
 *.sublime-workspace
+
+.vscode
