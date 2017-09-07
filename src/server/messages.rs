@@ -63,10 +63,8 @@ impl<'a> MsgDevicesList<'a> {
             data = data[4..].to_vec();
             println!("ID: {}", device_id);
 
-            let device_name_length: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
-                                          ((data[2] as i32) << 16) |
-                                          ((data[3] as i32) << 24);
-            data = data[4..].to_vec();
+            let device_name_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
+            data = data[2..].to_vec();
             println!("Name length: {}", device_name_length);
 
             let data_clone = data.clone();
@@ -99,8 +97,8 @@ impl<'a> Serializable for MsgDevicesList<'a> {
             let id_bytes: [u8; 4] = unsafe { transmute(id.to_le()) };
             device_bytes.extend(id_bytes.iter().cloned());
 
-            let name_length: [u8; 4] =
-                unsafe { transmute((name_and_channels.0.as_bytes().len() as i32).to_le() as i32) };
+            let name_length: [u8; 2] =
+                unsafe { transmute((name_and_channels.0.as_bytes().len() as u16).to_le() as u16) };
             device_bytes.extend(name_length.iter().cloned());
             device_bytes.extend(name_and_channels.0.as_bytes());
             println!("Serializing device, name: {} Length: {}",
@@ -144,15 +142,26 @@ impl MsgStartStreamRMS {
             channels: Vec::new(),
         };
 
-        start_msg.device = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
-                           ((data[3] as i32) << 24);
+        // In old protocol, multiple devices could be given.
+        // This isn't currently supported, but may be in the future?
+        // We're assuming that there's only single device for now.
 
+        // Read amount of devices
+        let _ = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
+                           ((data[3] as i32) << 24);
         data = data[4..].to_vec();
 
+        // Read devie ID
+        start_msg.device = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
+                           ((data[3] as i32) << 24);
+        data = data[4..].to_vec();
+
+        // Amount of channels - if there were multiple devices, we'd have multiple channel counts too.
         let channel_count = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
                             ((data[3] as i32) << 24);
         data = data[4..].to_vec();
 
+        // Read channels
         for _ in 0..channel_count {
             let channel_id: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
                                   ((data[2] as i32) << 16) |
@@ -209,6 +218,13 @@ impl MsgRMSPacket {
             value: 0f32,
         };
 
+        let mut data_array = [0u8; 4];
+        data_array[0] = data[0];
+        data_array[1] = data[1];
+        data_array[2] = data[2];
+        data_array[3] = data[3];
+        start_msg.value = unsafe { transmute::<[u8; 4], f32>(data_array) };
+
         start_msg
     }
 }
@@ -219,8 +235,7 @@ impl Serializable for MsgRMSPacket {
 
         let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
         let value_bytes: [u8; 4] = unsafe { transmute(self.value as f32) };
-        let length_bytes: [u8; 4] =
-            unsafe { transmute((4 + 4 + 4 as i32).to_le()) };
+        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + 4 as i32).to_le()) };
 
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());

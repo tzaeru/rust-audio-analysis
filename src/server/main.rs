@@ -37,8 +37,6 @@ fn send_rms_msg(mut stream: &TcpStream, rms: f32) -> Result<usize, std::io::Erro
     let mut rms_msg = messages::MsgRMSPacket::new();
     rms_msg.value = rms;
 
-    println!("Sending RMS {}", rms);
-
     let mut serialized = rms_msg.serialize();
     stream.write(serialized.as_mut_slice())
 }
@@ -63,7 +61,7 @@ fn main() {
                     let mut arena = analysis::pa_interface::AArena::new();
                     let mut arena_rc = Arc::new(RwLock::new(arena));
                     let mut chain = analysis::pa_interface::AChain::new(arena_rc.clone());
-                    let mut chain_ref = Rc::new(RefCell::new(chain));
+                    let mut chain_ref = Arc::new(RwLock::new(chain));
 
                     let rms = Arc::new(RwLock::new(analysis::pa_interface::RMS::new()));
                     let rms_id = arena_rc.write().unwrap().add_chainable(rms);
@@ -98,38 +96,48 @@ fn main() {
                                     }
 
                                     // Length that the message should have
-                                    let msg_length: i32 = msg_buffer[0] as i32 | ((msg_buffer[1] as i32) << 8) | ((msg_buffer[2] as i32)  << 16) | ((msg_buffer[3] as i32) << 24);
+                                    let mut msg_length: i32 = msg_buffer[0] as i32 | ((msg_buffer[1] as i32) << 8) | ((msg_buffer[2] as i32)  << 16) | ((msg_buffer[3] as i32) << 24);
                                     
-                                    println!("Message length: {}", msg_length);
-                                    println!("Buffer length: {}", msg_buffer.len());
+                                    println!("\nMessage length: {}", msg_length);
+                                    println!("Buffer length: {}\n", msg_buffer.len());
 
-                                    // We have a full length message if buffer has msg_length + 4 or more bytes
-                                    if msg_buffer.len() >= msg_length as usize
+                                    // We have a full length message if buffer has msg_length bytes
+                                    while msg_buffer.len() >= msg_length as usize
                                     {
                                         // Remove the message's worth of bytes from the buffer.
-                                        let message_bytes: Vec<u8> = msg_buffer.drain(0..msg_length as usize + 4).collect();
+                                        println!("Buffer before: {}", msg_buffer.len());
+                                        let mut message_bytes: Vec<u8> = msg_buffer.drain(0..msg_length as usize).collect();
+                                        println!("Buffer after: {}", msg_buffer.len());
                                         let msg_type = message_bytes[4] as i32 | ((message_bytes[5] as i32) << 8) | ((message_bytes[6] as i32)  << 16) | ((message_bytes[7] as i32) << 24);
                                         println!("Message type: {}", msg_type);
 
                                         if msg_type == MsgType::MSG_GET_RMS as i32
                                         {
-                                            chain_ref.borrow_mut().stop();
+                                            chain_ref.write().unwrap().stop();
 
-                                            let rms_msg = messages::MsgStartStreamRMS::deserialized(data[8..].to_vec());
+                                            // Ignore length & type when passing message_bytes
+                                            let msg_length = message_bytes.len();
+                                            let messages_bytes_without_type = message_bytes.drain(8..msg_length).collect();
+                                            let rms_msg = messages::MsgStartStreamRMS::deserialized(messages_bytes_without_type);
                                             println!("Device: {}", rms_msg.device);
                                             println!("Channels: {:?}", rms_msg.channels);
 
-                                            let source = Arc::new(RefCell::new(analysis::pa_interface::PASource::new(0, vec![0])));
+                                            let source = Arc::new(RefCell::new(analysis::pa_interface::PASource::new(rms_msg.device as u32, rms_msg.channels)));
                                             let source_id = arena_rc.write().unwrap().add_sourcable(source);
 
                                             chain = analysis::pa_interface::AChain::new(arena_rc.clone());
                                             chain.set_source(source_id);
                                             chain.add_node(rms_id);
 
-                                            chain_ref = Rc::new(RefCell::new(chain));
-                                            chain_ref.borrow_mut().start(chain_ref.clone());
+                                            chain_ref = Arc::new(RwLock::new(chain));
+                                            chain_ref.write().unwrap().start(chain_ref.clone());
 
                                             send_rms = true;
+                                        }
+
+                                        if msg_buffer.len() >= 4
+                                        {
+                                            msg_length = msg_buffer[0] as i32 | ((msg_buffer[1] as i32) << 8) | ((msg_buffer[2] as i32)  << 16) | ((msg_buffer[3] as i32) << 24);
                                         }
                                     }
                                 },
@@ -149,18 +157,16 @@ fn main() {
  
                             if send_rms == true
                             {
-                                println!("Trying");
                                 let arena_borrow = arena_rc.read().unwrap();
 
                                 if arena_borrow.chainables[&rms_id].read().unwrap().output().len() > 0
                                 {
                                     send_rms_msg(&stream, arena_borrow.chainables[&rms_id].read().unwrap().output()[0]);
                                 }
-                                println!("Got");
                             }
                     }
 
-                    chain_ref.borrow_mut().stop();
+                    chain_ref.write().unwrap().stop();
                 });
             },
             Err(e) => {

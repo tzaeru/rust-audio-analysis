@@ -65,7 +65,7 @@ impl AArena {
 }
 
 pub trait Sourcable {
-    fn start(&mut self, chain: Rc<RefCell<AChain>>);
+    fn start(&mut self, chain: Arc<RwLock<AChain>>);
     fn stop(&self);
 }
 
@@ -96,7 +96,7 @@ impl AChain {
     }
 
 
-    pub fn start(&mut self, self_ref: Rc<RefCell<AChain>>) {
+    pub fn start(&mut self, self_ref: Arc<RwLock<AChain>>) {
         match self.source {
             Some(source) =>
             {
@@ -132,13 +132,13 @@ impl AChain {
 
 pub struct PASource {
     device: u32,
-    channels: Vec<u32>,
+    channels: Vec<i32>,
 
     stream: Option<pa::Stream<pa::NonBlocking, pa::Input<f32>>>,
 }
 
 impl PASource {
-    pub fn new(device: u32, channels: Vec<u32>) -> PASource {
+    pub fn new(device: u32, channels: Vec<i32>) -> PASource {
         PASource {
             device: device,
             channels: channels,
@@ -149,7 +149,7 @@ impl PASource {
 }
 
 impl Sourcable for PASource {
-    fn start(&mut self, chain: Rc<RefCell<AChain>>) -> () {
+    fn start(&mut self, chain: Arc<RwLock<AChain>>) -> () {
         let device_info = port_audio.device_info(pa::DeviceIndex { 0: self.device }).unwrap();
 
         let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex { 0: self.device },
@@ -160,9 +160,9 @@ impl Sourcable for PASource {
 
         let audio_callback = move |pa::InputStreamCallbackArgs { mut buffer, frames, time, .. }| {
             //println!("PA CB");
-            chain.borrow().source_cb(buffer, frames);
+            chain.write().unwrap().source_cb(buffer, frames);
 
-            if chain.borrow().running == true
+            if chain.write().unwrap().running == true
             {
                 pa::Continue
             }
@@ -204,8 +204,6 @@ impl Chainable for RMS {
         let square_mean = square_sum * 1.0f32 / buffer.len() as f32;
 
         let rms = f32::sqrt(square_mean);
-
-        println!("RMS: {}", rms);
 
         self.buffer.push(rms);
     }

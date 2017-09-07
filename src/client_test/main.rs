@@ -28,12 +28,20 @@ fn main() {
                         continue;
                     }
 
-                    println!("Got msg.");
-
                     let length: i32 = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32)  << 16) | ((data[3] as i32) << 24);
-                    println!("Result length: {:?}", result);
-                    println!("Length: {}", length);
 
+                    let msg_type: i32 = data[4] as i32 | ((data[5] as i32) << 8) | ((data[6] as i32)  << 16) | ((data[7] as i32) << 24);
+
+                    if msg_type == messages::MsgType::MSG_RMS_PACKET as i32
+                    {
+                        let rms_msg = messages::MsgRMSPacket::deserialized(data[8..].to_vec());
+
+                        // println!("RMS: {:?}", rms_msg.value);
+                    }
+                    else if msg_type == messages::MsgType::MSG_DEVICES_LIST as i32
+                    {
+                        let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
+                    }
                     // Skip message length and type (WIP)
                     //let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
 
