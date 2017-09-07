@@ -70,8 +70,8 @@ pub trait Sourcable {
 }
 
 pub trait Chainable {
-    fn update(&mut self, buffer: &[f32]);
-    fn output(&self) -> &[f32];
+    fn update(&mut self, buffer: &Vec<Vec<f32>>);
+    fn output(&self) -> &Vec<f32>;
 }
 
 pub struct AChain {
@@ -112,12 +112,12 @@ impl AChain {
         self.running = false;
     }
 
-    pub fn source_cb(&self, buffer: &[f32], frames: usize) {
+    pub fn source_cb(&self, buffer: Vec<Vec<f32>>, frames: usize) {
         //println!("Got callback?");
 
         for i in 0..self.nodes.len() {
             let node = &self.arena.read().unwrap().chainables[&self.nodes[i]];
-            node.write().unwrap().update(buffer);
+            node.write().unwrap().update(&buffer);
         }
     }
 
@@ -157,10 +157,32 @@ impl Sourcable for PASource {
                                                             INTERLEAVED,
                                                             0.0f64);
 
-
+        let channels = self.channels.to_vec();
         let audio_callback = move |pa::InputStreamCallbackArgs { mut buffer, frames, time, .. }| {
-            //println!("PA CB");
-            chain.write().unwrap().source_cb(buffer, frames);
+
+
+            // Unleave
+            let mut unleaved_buffer:Vec<Vec<f32>> = Vec::new();
+
+            // Initialize with empty arrays for each channel
+            for _ in 0..channels.len()
+            {
+                unleaved_buffer.push(Vec::new());
+            }
+
+            let mut i = 0i32;
+            while i < buffer.len() as i32
+            {
+                for j in 0..channels.len()
+                {
+                    unleaved_buffer[j].push(buffer[i as usize + channels[j] as usize]);
+                }
+
+                // Increase index to next set of channels. I.e. index points to 1st interleaved channel for each sample.
+                i += device_info.max_input_channels;
+            }
+
+            chain.write().unwrap().source_cb(unleaved_buffer, frames);
 
             if chain.write().unwrap().running == true
             {
@@ -170,6 +192,8 @@ impl Sourcable for PASource {
                 pa::Complete
             }
         };
+
+
         // pa::input<f32>, pa::NonBlocking
         let settings = pa::InputStreamSettings::new(input_params, SAMPLE_RATE, FRAMES);
         let mut stream = port_audio.open_non_blocking_stream(settings, audio_callback).unwrap();
@@ -193,12 +217,12 @@ impl RMS {
 }
 
 impl Chainable for RMS {
-    fn update(&mut self, buffer: &[f32]) {
+    fn update(&mut self, buffer: &Vec<Vec<f32>>) {
         self.buffer = Vec::new();
 
         let mut square_sum = 0.0f32;
         for x in 0..buffer.len() {
-            square_sum += buffer[x] * buffer[x];
+            square_sum += buffer[0][x] * buffer[0][x];
         }
 
         let square_mean = square_sum * 1.0f32 / buffer.len() as f32;
@@ -208,7 +232,7 @@ impl Chainable for RMS {
         self.buffer.push(rms);
     }
 
-    fn output(&self) -> &[f32] {
+    fn output(&self) -> &Vec<f32> {
         &self.buffer
     }
 }
@@ -235,131 +259,4 @@ pub fn get_devices<'a>() -> Result<HashMap<i32, (&'a str, i32)>, pa::Error> {
     }
 
     return Ok(devices);
-}
-
-// WIP. Opens stream and all that. Not part of the proper analysis chain structure.
-pub fn get_rms(device: u32, rms_callback: fn(f32) -> ()) -> Result<(), pa::Error> {
-    let device_info = try!(port_audio.device_info(pa::DeviceIndex { 0: device }));
-
-    let input_params = pa::StreamParameters::<f32>::new(pa::DeviceIndex { 0: device },
-                                                        device_info.max_input_channels,
-                                                        INTERLEAVED,
-                                                        0.0f64);
-
-    let audio_callback = move |pa::InputStreamCallbackArgs { mut buffer, frames, time, .. }| {
-        // let current_time = time.current;
-        let mut square_sum = 0.0f32;
-        for x in 0..buffer.len() {
-            square_sum += buffer[x] * buffer[x];
-        }
-
-        let square_mean = square_sum * 1.0f32 / buffer.len() as f32;
-
-        let rms = f32::sqrt(square_mean);
-
-        println!("Total rms: {}", rms);
-
-        assert!(frames == FRAMES as usize);
-
-        pa::Continue
-    };
-
-    let settings = pa::InputStreamSettings::new(input_params, SAMPLE_RATE, FRAMES);
-    let mut stream = try!(port_audio.open_non_blocking_stream(settings, audio_callback));
-    println!("Starting stream..");
-    try!(stream.start());
-
-    while let true = try!(stream.is_active()) {
-
-    }
-
-    port_audio.is_input_format_supported(input_params, SAMPLE_RATE)
-}
-
-// Test function, please ignore.
-pub fn run() -> Result<(), pa::Error> {
-
-    println!("PortAudio:");
-    println!("version: {}", port_audio.version());
-    println!("version text: {:?}", port_audio.version_text());
-    println!("host count: {}", try!(port_audio.host_api_count()));
-
-    let default_host = try!(port_audio.default_host_api());
-    println!("default host: {:#?}",
-             port_audio.host_api_info(default_host));
-
-    let def_input = try!(port_audio.default_input_device());
-    let input_info = try!(port_audio.device_info(def_input));
-    println!("Default input device info: {:#?}", &input_info);
-
-    // Construct the input stream parameters.
-    let latency = input_info.default_low_input_latency;
-    let input_params = pa::StreamParameters::<f32>::new(def_input, CHANNELS, INTERLEAVED, latency);
-
-    let def_output = try!(port_audio.default_output_device());
-    let output_info = try!(port_audio.device_info(def_output));
-    println!("Default output device info: {:#?}", &output_info);
-
-    // Construct the output stream parameters.
-    let latency = output_info.default_low_output_latency;
-    let output_params = pa::StreamParameters::new(def_output, CHANNELS, INTERLEAVED, latency);
-
-    // Check that the stream format is supported.
-    try!(port_audio.is_duplex_format_supported(input_params, output_params, SAMPLE_RATE));
-
-    // Construct the settings with which we'll open our duplex stream.
-    let settings = pa::DuplexStreamSettings::new(input_params, output_params, SAMPLE_RATE, FRAMES);
-
-    // Once the countdown reaches 0 we'll close the stream.
-    let mut count_down = 1.0;
-
-    // Keep track of the last `current_time` so we can calculate the delta time.
-    let mut maybe_last_time = None;
-
-    // We'll use this channel to send the count_down to the main thread for fun.
-    let (sender, receiver) = ::std::sync::mpsc::channel();
-
-    // A callback to pass to the non-blocking stream.
-    let callback =
-        move |pa::DuplexStreamCallbackArgs { in_buffer, out_buffer, frames, time, .. }| {
-            let current_time = time.current;
-            let prev_time = maybe_last_time.unwrap_or(current_time);
-            let dt = current_time - prev_time;
-            count_down -= dt;
-            maybe_last_time = Some(current_time);
-
-            assert!(frames == FRAMES as usize);
-            sender.send(count_down).ok();
-
-            // Pass the input straight to the output - BEWARE OF FEEDBACK!
-            for (output_sample, input_sample) in out_buffer.iter_mut().zip(in_buffer.iter()) {
-                *output_sample = *input_sample;
-            }
-
-            if count_down > 0.0 {
-                pa::Continue
-            } else {
-                pa::Complete
-            }
-        };
-
-    // Construct a stream with input and output sample types of f32.
-    let mut stream = try!(port_audio.open_non_blocking_stream(settings, callback));
-
-    try!(stream.start());
-
-    // Loop while the non-blocking stream is active.
-    while let true = try!(stream.is_active()) {
-
-        // Do some stuff!
-        while let Ok(count_down) = receiver.try_recv() {
-            println!("count_down: {:?}", count_down);
-        }
-
-    }
-
-    try!(stream.stop());
-
-
-    Ok(())
 }
