@@ -3,6 +3,8 @@ use std::net::{TcpListener, TcpStream};
 use std::io::prelude::*;
 use std::thread;
 
+use std::time::{Duration, Instant};
+
 extern crate audio_analysis;
 use audio_analysis::analysis;
 use audio_analysis::server::messages;
@@ -67,6 +69,10 @@ fn main() {
                     let rms_id = arena_rc.write().unwrap().add_chainable(rms);
 
                     let mut send_rms = false;
+
+                    // Cap to 20 outgoing messages per second
+                    let mut sent_msg_instant = Instant::now();
+                    let send_cap = 20;
 
                     // Buffer for whole message.
                     // Each message is prefixed by message length.
@@ -154,9 +160,13 @@ fn main() {
                                     }
                                 }
                             }
- 
-                            if send_rms == true
+                            
+                            let elapsed_as_mills = sent_msg_instant.elapsed().as_secs() * 1000
+                                            + sent_msg_instant.elapsed().subsec_nanos() as u64 / 1000000;
+                            if send_rms == true && elapsed_as_mills > 1000/20
                             {
+                                sent_msg_instant = Instant::now();
+
                                 let arena_borrow = arena_rc.read().unwrap();
 
                                 if arena_borrow.chainables[&rms_id].read().unwrap().output().len() > 0

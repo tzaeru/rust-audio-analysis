@@ -170,15 +170,18 @@ impl Sourcable for PASource {
                 unleaved_buffer.push(Vec::new());
             }
 
+            // Iterate through the whole interleaved buffer, moving it to unleaved buffer.
             let mut i = 0i32;
             while i < buffer.len() as i32
             {
+                // Iterate through all the channels we want.
                 for j in 0..channels.len()
                 {
+                    // Since 'i' points to 1st channel, we'll take element i + channel index (starting from 0) from the interleaved buffer.
                     unleaved_buffer[j].push(buffer[i as usize + channels[j] as usize]);
                 }
 
-                // Increase index to next set of channels. I.e. index points to 1st interleaved channel for each sample.
+                // Increase index to next set of channels. I.e. index points to 1st interleaved channel for each sample frame.
                 i += device_info.max_input_channels;
             }
 
@@ -220,14 +223,20 @@ impl Chainable for RMS {
     fn update(&mut self, buffer: &Vec<Vec<f32>>) {
         self.buffer = Vec::new();
 
-        let mut square_sum = 0.0f32;
-        for x in 0..buffer.len() {
-            square_sum += buffer[0][x] * buffer[0][x];
+        let mut rms = 0f32;
+        for i in 0..buffer.len()
+        {
+            let mut square_sum = 0.0f32;
+            for x in 0..buffer[i].len() {
+                square_sum += buffer[i][x] * buffer[i][x];
+            }
+
+            let square_mean = square_sum * 1.0f32 / buffer.len() as f32;
+
+            rms += f32::sqrt(square_mean);
         }
 
-        let square_mean = square_sum * 1.0f32 / buffer.len() as f32;
-
-        let rms = f32::sqrt(square_mean);
+        rms /= buffer.len() as f32;
 
         self.buffer.push(rms);
     }

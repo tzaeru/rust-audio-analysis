@@ -9,6 +9,7 @@ fn request_rms(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
     let mut rms_msg = messages::MsgStartStreamRMS::new();
     rms_msg.device = 0;
+    rms_msg.channels = vec![0, 1];
 
     let mut serialized = rms_msg.serialize();
     stream.write(serialized.as_mut_slice())
@@ -36,7 +37,7 @@ fn main() {
                     {
                         let rms_msg = messages::MsgRMSPacket::deserialized(data[8..].to_vec());
 
-                        // println!("RMS: {:?}", rms_msg.value);
+                        println!("RMS: {:?}", rms_msg.value);
                     }
                     else if msg_type == messages::MsgType::MSG_DEVICES_LIST as i32
                     {

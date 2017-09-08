@@ -93,6 +93,7 @@ impl<'a> Serializable for MsgDevicesList<'a> {
         let device_count_bytes: [u8; 4] = unsafe { transmute((self.devices.len() as i32).to_le()) };
 
         let mut device_bytes = Vec::new();
+
         for (id, name_and_channels) in &self.devices {
             let id_bytes: [u8; 4] = unsafe { transmute(id.to_le()) };
             device_bytes.extend(id_bytes.iter().cloned());
@@ -161,6 +162,8 @@ impl MsgStartStreamRMS {
                             ((data[3] as i32) << 24);
         data = data[4..].to_vec();
 
+        println!("Channel count: {}", channel_count);
+
         // Read channels
         for _ in 0..channel_count {
             let channel_id: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
@@ -182,6 +185,9 @@ impl Serializable for MsgStartStreamRMS {
         let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
         let device_bytes: [u8; 4] = unsafe { transmute((self.device.clone() as i32).to_le()) };
 
+
+        // Device amount - make it possible to define multiple devices. For now, just 1 device supported.
+
         let mut channels_bytes = Vec::new();
         for i in 0..self.channels.len() {
             let channel_bytes: [u8; 4] = unsafe { transmute(self.channels[i].to_le()) };
@@ -189,10 +195,14 @@ impl Serializable for MsgStartStreamRMS {
         }
 
         let length_bytes: [u8; 4] =
-            unsafe { transmute((4 + 4 + channels_bytes.len() as i32).to_le()) };
+            unsafe { transmute((4 + 4 + 4 + 4 + 4 + channels_bytes.len() as i32).to_le()) };
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
+        let device_count: [u8; 4] = unsafe { transmute((1 as i32).to_le()) };
+        bytes.extend(device_count.iter().cloned());
         bytes.extend(device_bytes.iter().cloned());
+        let channel_count: [u8; 4] = unsafe { transmute((self.channels.len() as i32).to_le()) };
+        bytes.extend(channel_count.iter().cloned());
         bytes.extend(channels_bytes.iter().cloned());
 
         bytes
