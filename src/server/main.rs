@@ -5,13 +5,14 @@ use std::thread;
 
 use std::time::{Duration, Instant};
 
-extern crate audio_analysis;
-use audio_analysis::analysis;
-use audio_analysis::server::messages;
-use audio_analysis::analysis::pa_interface::Chainable;
+mod messages;
 
-use audio_analysis::server::messages::Serializable;
-use audio_analysis::server::messages::MsgType;
+use messages::Serializable;
+use messages::MsgType;
+
+extern crate raa;
+use raa::analysis;
+use raa::analysis::pa_interface::Chainable;
 
 use std::cell::RefCell;
 use std::rc::Rc;
