@@ -18,3 +18,8 @@ path = "src/client_test/main.rs"
 [[bin]]
 name = "test"
 path = "src/test/main.rs"
+
+[lib]
+name = "raa"
+path = "src/lib.rs"
+crate-type = ["dylib"]
