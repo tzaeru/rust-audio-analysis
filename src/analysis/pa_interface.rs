@@ -30,7 +30,7 @@ lazy_static! {
 }
 
 pub struct AArena {
-    pub sourcables: HashMap<u64, Arc<RefCell<Sourcable>>>,
+    pub sourcables: HashMap<u64, Arc<RwLock<Sourcable>>>,
     pub chainables: HashMap<u64, Arc<RwLock<Chainable>>>,
 
     created_nodes: u64,
@@ -45,7 +45,7 @@ impl AArena {
         }
     }
 
-    pub fn add_sourcable(&mut self, sourcable: Arc<RefCell<Sourcable>>) -> u64 {
+    pub fn add_sourcable(&mut self, sourcable: Arc<RwLock<Sourcable>>) -> u64 {
         let id = self.created_nodes;
 
         self.sourcables.insert(id, sourcable);
@@ -67,6 +67,7 @@ impl AArena {
 pub trait Sourcable {
     fn start(&mut self, chain: Arc<RwLock<AChain>>);
     fn stop(&self);
+    fn is_active(&self) -> bool;
 }
 
 pub trait Chainable {
@@ -101,7 +102,7 @@ impl AChain {
             Some(source) =>
             {
                 let arena_borrow = self.arena.read().unwrap();
-                arena_borrow.sourcables[&source].borrow_mut().start(self_ref);
+                arena_borrow.sourcables[&source].write().unwrap().start(self_ref);
                 self.running = true;
             },
             None => println!("No sourcable set."),
@@ -206,7 +207,17 @@ impl Sourcable for PASource {
 
         self.stream = Option::Some(stream);
     }
+
     fn stop(&self) -> () {}
+
+    fn is_active(&self) -> bool
+    {
+        match self.stream
+        {
+            Some(ref stream) => return stream.is_active().unwrap(),
+            None => return false
+        }
+    }
 }
 
 pub struct RMS {

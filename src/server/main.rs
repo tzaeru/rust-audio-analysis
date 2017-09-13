@@ -68,6 +68,8 @@ fn main() {
                     let rms = Arc::new(RwLock::new(analysis::pa_interface::RMS::new()));
                     let rms_id = arena_rc.write().unwrap().add_chainable(rms);
 
+                    let mut source_id = 0u64;
+
                     let mut send_rms = false;
 
                     // Cap to 20 outgoing messages per second
@@ -128,8 +130,8 @@ fn main() {
                                             println!("Device: {}", rms_msg.device);
                                             println!("Channels: {:?}", rms_msg.channels);
 
-                                            let source = Arc::new(RefCell::new(analysis::pa_interface::PASource::new(rms_msg.device as u32, rms_msg.channels)));
-                                            let source_id = arena_rc.write().unwrap().add_sourcable(source);
+                                            let source = Arc::new(RwLock::new(analysis::pa_interface::PASource::new(rms_msg.device as u32, rms_msg.channels)));
+                                            source_id = arena_rc.write().unwrap().add_sourcable(source);
 
                                             chain = analysis::pa_interface::AChain::new(arena_rc.clone());
                                             chain.set_source(source_id);
@@ -173,6 +175,19 @@ fn main() {
                                 {
                                     send_rms_msg(&stream, arena_borrow.chainables[&rms_id].read().unwrap().output()[0]);
                                 }
+                            }
+
+                            if send_rms == true
+                            {
+                                let arena_borrow = arena_rc.read().unwrap();
+
+                                /*if arena_borrow.sourcables[&source_id].read().unwrap().is_active() == true
+                                {
+                                    println!("Is active at {}", elapsed_as_mills);
+                                }
+                                else {
+                                    println!("Is not active");
+                                }*/
                             }
                     }
 
