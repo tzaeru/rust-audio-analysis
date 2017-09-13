@@ -22,4 +22,4 @@ path = "src/test/main.rs"
 [lib]
 name = "raa"
 path = "src/lib.rs"
-crate-type = ["dylib"]
+crate-type = ["cdylib", "rlib"]
