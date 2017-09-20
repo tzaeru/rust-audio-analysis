@@ -1,9 +1,9 @@
 use std::io::prelude::*;
 use std::net::TcpStream;
 
-extern crate audio_analysis;
-use audio_analysis::server::messages;
-use audio_analysis::server::messages::Serializable;
+extern crate raa;
+use raa::server::messages;
+use raa::server::messages::Serializable;
 
 fn request_rms(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
@@ -42,6 +42,14 @@ fn main() {
                     else if msg_type == messages::MsgType::MSG_DEVICES_LIST as i32
                     {
                         let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());
+                    }
+                    else if msg_type == messages::MsgType::MSG_ERROR as i32
+                    {
+                        let message = messages::MsgError::deserialized(data[8..].to_vec()).message;
+                        println!("Error terror: {:?}", message);
+                    }
+                    else {
+                        println!("Unknown message type.");
                     }
                     // Skip message length and type (WIP)
                     //let _ = messages::MsgDevicesList::deserialized(data[8..].to_vec());

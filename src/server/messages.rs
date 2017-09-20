@@ -12,6 +12,7 @@ pub enum MsgType {
     MSG_DB_PACKET = 5,
     MSG_SET_BOOLEAN_PARAM = 6,
     MSG_CONFIGUREDB = 7,
+    MSG_ERROR = 8,
 }
 
 pub trait Serializable {
@@ -250,6 +251,55 @@ impl Serializable for MsgRMSPacket {
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
         bytes.extend(value_bytes.iter().cloned());
+
+        bytes
+    }
+}
+
+pub struct MsgError {
+    pub msg_type: MsgType,
+    pub message: String,
+}
+
+impl MsgError {
+    pub fn new() -> MsgError {
+        MsgError {
+            msg_type: MsgType::MSG_ERROR,
+            message: "".to_string(),
+        }
+    }
+
+    pub fn deserialized(mut data: Vec<u8>) -> MsgError {
+        let mut start_msg = MsgError {
+            msg_type: MsgType::MSG_ERROR,
+            message: "".to_string(),
+        };
+
+        let message_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
+        data = data[2..].to_vec();
+        
+        let data_clone = data.clone();
+        let message = str::from_utf8(&data_clone[..message_length as usize]).unwrap();
+
+        start_msg.message = message.to_string();
+
+        start_msg
+    }
+}
+
+impl Serializable for MsgError {
+    fn serialize(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+
+        let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
+        let message_length: [u8; 2] = unsafe { transmute ((self.message.as_bytes().len() as u16).to_le() as u16) };
+        // Length: 4 from the length information (u32) itself, 4 from the length information of the error message, + error message length
+        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + 4 + self.message.as_bytes().len() as i32).to_le()) };
+
+        bytes.extend(length_bytes.iter().cloned());
+        bytes.extend(type_bytes.iter().cloned());
+        bytes.extend(message_length.iter().cloned());
+        bytes.extend(self.message.as_bytes());
 
         bytes
     }

@@ -35,6 +35,15 @@ fn send_devices(mut stream: &TcpStream) -> Result<usize, std::io::Error>
     stream.write(serialized.as_mut_slice())
 }
 
+fn send_test_error(mut stream: &TcpStream) -> Result<usize, std::io::Error>
+{
+    let mut error_msg = messages::MsgError::new();
+    error_msg.message = "horror".to_string();
+
+    let mut serialized = error_msg.serialize();
+    stream.write(serialized.as_mut_slice())
+}
+
 fn send_rms_msg(mut stream: &TcpStream, rms: f32) -> Result<usize, std::io::Error>
 {
     let mut rms_msg = messages::MsgRMSPacket::new();

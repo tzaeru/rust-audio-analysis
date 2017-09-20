@@ -136,6 +136,8 @@ pub struct PASource {
     channels: Vec<i32>,
 
     stream: Option<pa::Stream<pa::NonBlocking, pa::Input<f32>>>,
+
+    error: String
 }
 
 impl PASource {
@@ -145,6 +147,8 @@ impl PASource {
             channels: channels,
 
             stream: Option::None,
+
+            error: "".to_string()
         }
     }
 }
