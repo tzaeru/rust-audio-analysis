@@ -1,7 +1,7 @@
 use std::net::{TcpListener, TcpStream};
 
 use std::io::prelude::*;
-use std::thread;
+use std::{thread, time};
 
 use std::time::{Duration, Instant};
 
@@ -199,6 +199,9 @@ fn main() {
                                     println!("Is not active");
                                 }*/
                             }
+
+                            let ten_millis = time::Duration::from_millis(10);
+                            thread::sleep(ten_millis);
                     }
 
                     chain_ref.write().unwrap().stop();
@@ -208,5 +211,7 @@ fn main() {
                 
             },
         }
+        let ten_millis = time::Duration::from_millis(10);
+        thread::sleep(ten_millis);
     }
 }
