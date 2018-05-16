@@ -13,6 +13,7 @@ use messages::MsgType;
 extern crate raa;
 use raa::analysis;
 use raa::analysis::pa_interface::Chainable;
+use raa::analysis::pa_interface::Sourcable;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -27,7 +28,7 @@ fn handle_client(stream: TcpStream) {
 
 fn send_devices(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
-    let mut devices = analysis::pa_interface::get_devices();
+    let mut devices = analysis::pa_interface::SoundioSource::get_devices();
     let mut device_msg = messages::MsgDevicesList::new();
     device_msg.devices = devices.unwrap();
 
@@ -140,7 +141,7 @@ fn main() {
                                             println!("Device: {}", rms_msg.device);
                                             println!("Channels: {:?}", rms_msg.channels);
 
-                                            let source = Arc::new(RwLock::new(analysis::pa_interface::PASource::new(rms_msg.device as u32, rms_msg.channels)));
+                                            let source = Arc::new(RwLock::new(analysis::pa_interface::SoundioSource::new(rms_msg.device as u32, rms_msg.channels)));
                                             source_id = arena_rc.write().unwrap().add_sourcable(source);
 
                                             chain = analysis::pa_interface::AChain::new(arena_rc.clone());

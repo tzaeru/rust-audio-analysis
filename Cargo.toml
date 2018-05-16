@@ -6,6 +6,7 @@ authors = ["tzaeru <tzaeru@gmail.com>"]
 [dependencies]
 portaudio = "0.7.0"
 lazy_static = "0.2"
+soundio = {git = "https://github.com/Timmmm/soundio-rs"}
 
 [[bin]]
 name = "server"

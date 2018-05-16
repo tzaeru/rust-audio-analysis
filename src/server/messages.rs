@@ -30,20 +30,20 @@ impl MsgGetDevices {
     }
 }
 
-pub struct MsgDevicesList<'a> {
+pub struct MsgDevicesList {
     pub msg_type: MsgType,
-    pub devices: HashMap<i32, (&'a str, i32)>,
+    pub devices: HashMap<i32, (String, i32)>,
 }
 
-impl<'a> MsgDevicesList<'a> {
-    pub fn new() -> MsgDevicesList<'a> {
+impl MsgDevicesList {
+    pub fn new() -> MsgDevicesList {
         MsgDevicesList {
             msg_type: MsgType::MSG_DEVICES_LIST,
             devices: HashMap::new(),
         }
     }
 
-    pub fn deserialized(mut data: Vec<u8>) -> MsgDevicesList<'a> {
+    pub fn deserialized(mut data: Vec<u8>) -> MsgDevicesList {
         let mut devices_list_msg = MsgDevicesList {
             msg_type: MsgType::MSG_DEVICES_LIST,
             devices: HashMap::new(),
@@ -85,7 +85,7 @@ impl<'a> MsgDevicesList<'a> {
     }
 }
 
-impl<'a> Serializable for MsgDevicesList<'a> {
+impl Serializable for MsgDevicesList {
     fn serialize(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
 
