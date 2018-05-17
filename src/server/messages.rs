@@ -164,8 +164,7 @@ impl MsgStartStreamRMS {
 
         // Read devie ID
         let device_id_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
-
-        let data_clone = data.clone();
+        data = data[2..].to_vec();
         let data_clone = data.clone();
         start_msg.device_id = str::from_utf8(&data_clone[..device_id_length as usize]).unwrap().to_string();
         data = data[device_id_length as usize..].to_vec();
@@ -212,7 +211,7 @@ impl Serializable for MsgStartStreamRMS {
         }
 
         let length_bytes: [u8; 4] =
-            unsafe { transmute((4 + 4 + 4 + 2 + device_bytes.len() as i32 + 4 + channels_bytes.len() as i32).to_le()) };
+            unsafe { transmute((4 + 4 + 4 + device_bytes.len() as i32 + 4 + channels_bytes.len() as i32).to_le()) };
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
         let device_count: [u8; 4] = unsafe { transmute((1 as i32).to_le()) };

@@ -8,7 +8,7 @@ use raa::server::messages::Serializable;
 fn request_rms(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
     let mut rms_msg = messages::MsgStartStreamRMS::new();
-    rms_msg.device = 0;
+    rms_msg.device_id = "{0.0.1.00000000}.{262f3ef4-8640-41c3-8d1f-dcab33c1327c}".to_string();
     rms_msg.channels = vec![0, 1];
 
     let mut serialized = rms_msg.serialize();
