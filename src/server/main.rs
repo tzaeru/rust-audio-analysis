@@ -138,10 +138,10 @@ fn main() {
                                             let msg_length = message_bytes.len();
                                             let messages_bytes_without_type = message_bytes.drain(8..msg_length).collect();
                                             let rms_msg = messages::MsgStartStreamRMS::deserialized(messages_bytes_without_type);
-                                            println!("Device: {}", rms_msg.device);
+                                            println!("Device: {}", rms_msg.device_id);
                                             println!("Channels: {:?}", rms_msg.channels);
 
-                                            let source = Arc::new(RwLock::new(analysis::pa_interface::SoundioSource::new(rms_msg.device as u32, rms_msg.channels)));
+                                            let source = Arc::new(RwLock::new(analysis::pa_interface::SoundioSource::new(rms_msg.device_id, rms_msg.channels)));
                                             source_id = arena_rc.write().unwrap().add_sourcable(source);
 
                                             chain = analysis::pa_interface::AChain::new(arena_rc.clone());

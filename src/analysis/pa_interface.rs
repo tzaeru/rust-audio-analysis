@@ -87,7 +87,7 @@ impl AArena {
 pub trait Sourcable {
     fn start(&mut self, chain: Arc<RwLock<AChain>>);
     fn stop(&self);
-    fn get_devices() -> Result<HashMap<i32, (String, i32)>, ()> where Self: Sized;
+    fn get_devices() -> Result<HashMap<String, (String, i32)>, ()> where Self: Sized;
     fn is_active(&self) -> bool;
 }
 
@@ -161,9 +161,9 @@ pub struct PASource {
 }
 
 impl PASource {
-    pub fn new(device: u32, channels: Vec<i32>) -> PASource {
+    pub fn new(device: String, channels: Vec<i32>) -> PASource {
         PASource {
-            device: device,
+            device: device.parse::<u32>().unwrap(),
             channels: channels,
 
             stream: Option::None,
@@ -240,7 +240,7 @@ impl Sourcable for PASource {
         }
     }
 
-    fn get_devices() -> Result<HashMap<i32, (String, i32)>, ()> where Self: Sized
+    fn get_devices() -> Result<HashMap<String, (String, i32)>, ()> where Self: Sized
     {
         let mut devices = HashMap::new();
 
@@ -256,7 +256,7 @@ impl Sourcable for PASource {
                 continue;
             }
 
-            devices.insert(device_index.0 as i32,
+            devices.insert(device_index.0.to_string(),
                            (input_info.name.to_string(), input_info.max_input_channels));
         }
 
@@ -266,7 +266,7 @@ impl Sourcable for PASource {
 }
 
 pub struct SoundioSource<'a> {
-    device: u32,
+    device: String,
     channels: Vec<i32>,
 
     stream: Option<soundio::InStream<'a>>,
@@ -275,7 +275,7 @@ pub struct SoundioSource<'a> {
 }
 
 impl<'a> SoundioSource<'a> {
-    pub fn new (device: u32, channels: Vec<i32>) -> SoundioSource<'a> {
+    pub fn new (device: String, channels: Vec<i32>) -> SoundioSource<'a> {
         SoundioSource {
             device: device,
             channels: channels,
@@ -293,7 +293,6 @@ impl<'a> Sourcable for SoundioSource<'a> {
         let audio_callback = move |stream: &mut soundio::InStreamReader| {
             // Unleave
             let mut unleaved_buffer:Vec<Vec<f32>> = Vec::new();
-            println!("{:?}", stream.get_latency());
 
             // Initialize with empty arrays for each channel
             for _ in 0..stream.channel_count()
@@ -368,14 +367,12 @@ impl<'a> Sourcable for SoundioSource<'a> {
         }
     }
 
-    fn get_devices() -> Result<HashMap<i32, (String, i32)>, ()> where Self: Sized
+    fn get_devices() -> Result<HashMap<String, (String, i32)>, ()> where Self: Sized
     {
         let mut devices = HashMap::new();
 
-        let mut i = 0;
         for dev in soundio_ctx.input_devices().unwrap() {
-            devices.insert(i as i32, (dev.name(), dev.current_layout().channels.len() as i32));
-            i += 1;
+            devices.insert(dev.id(), (dev.name(), dev.current_layout().channels.len() as i32));
         }
 
         return Ok(devices);

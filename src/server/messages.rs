@@ -32,7 +32,7 @@ impl MsgGetDevices {
 
 pub struct MsgDevicesList {
     pub msg_type: MsgType,
-    pub devices: HashMap<i32, (String, i32)>,
+    pub devices: HashMap<String, (String, i32)>,
 }
 
 impl MsgDevicesList {
@@ -58,11 +58,15 @@ impl MsgDevicesList {
         data = data[4..].to_vec();
 
         for _ in 0..device_amount {
-            let device_id: i32 = data[0] as i32 | ((data[1] as i32) << 8) |
-                                 ((data[2] as i32) << 16) |
-                                 ((data[3] as i32) << 24);
-            data = data[4..].to_vec();
+            let device_id_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
+            data = data[2..].to_vec();
+            println!("ID length: {}", device_id_length);
+
+            let data_clone = data.clone();
+            let device_id = str::from_utf8(&data_clone[..device_id_length as usize]).unwrap();
             println!("ID: {}", device_id);
+
+            data = data[device_id_length as usize..].to_vec();
 
             let device_name_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
             data = data[2..].to_vec();
@@ -96,14 +100,19 @@ impl Serializable for MsgDevicesList {
         let mut device_bytes = Vec::new();
 
         for (id, name_and_channels) in &self.devices {
-            let id_bytes: [u8; 4] = unsafe { transmute(id.to_le()) };
-            device_bytes.extend(id_bytes.iter().cloned());
+            let id_length: [u8; 2] =
+                unsafe { transmute((id.as_bytes().len() as u16).to_le() as u16) };
+            device_bytes.extend(id_length.iter().cloned());
+            device_bytes.extend(id.as_bytes());
+            println!("Serializing device, ID: {}",
+                     id);
+            println!("ID bytes: {:?}", id_length);
 
             let name_length: [u8; 2] =
                 unsafe { transmute((name_and_channels.0.as_bytes().len() as u16).to_le() as u16) };
             device_bytes.extend(name_length.iter().cloned());
             device_bytes.extend(name_and_channels.0.as_bytes());
-            println!("Serializing device, name: {} Length: {}",
+            println!("Name: {} Length: {}",
                      name_and_channels.0,
                      name_and_channels.0.as_bytes().len());
             println!("Name bytes: {:?}", name_length);
@@ -124,7 +133,7 @@ impl Serializable for MsgDevicesList {
 
 pub struct MsgStartStreamRMS {
     pub msg_type: MsgType,
-    pub device: i32,
+    pub device_id: String,
     pub channels: Vec<i32>,
 }
 
@@ -132,7 +141,7 @@ impl MsgStartStreamRMS {
     pub fn new() -> MsgStartStreamRMS {
         MsgStartStreamRMS {
             msg_type: MsgType::MSG_GET_RMS,
-            device: 0,
+            device_id: "".to_string(),
             channels: Vec::new(),
         }
     }
@@ -140,7 +149,7 @@ impl MsgStartStreamRMS {
     pub fn deserialized(mut data: Vec<u8>) -> MsgStartStreamRMS {
         let mut start_msg = MsgStartStreamRMS {
             msg_type: MsgType::MSG_GET_RMS,
-            device: 0,
+            device_id: "".to_string(),
             channels: Vec::new(),
         };
 
@@ -154,9 +163,12 @@ impl MsgStartStreamRMS {
         data = data[4..].to_vec();
 
         // Read devie ID
-        start_msg.device = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
-                           ((data[3] as i32) << 24);
-        data = data[4..].to_vec();
+        let device_id_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
+
+        let data_clone = data.clone();
+        let data_clone = data.clone();
+        start_msg.device_id = str::from_utf8(&data_clone[..device_id_length as usize]).unwrap().to_string();
+        data = data[device_id_length as usize..].to_vec();
 
         // Amount of channels - if there were multiple devices, we'd have multiple channel counts too.
         let channel_count = data[0] as i32 | ((data[1] as i32) << 8) | ((data[2] as i32) << 16) |
@@ -184,7 +196,11 @@ impl Serializable for MsgStartStreamRMS {
         let mut bytes = Vec::new();
 
         let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
-        let device_bytes: [u8; 4] = unsafe { transmute((self.device.clone() as i32).to_le()) };
+        let id_length: [u8; 2] =
+            unsafe { transmute((self.device_id.as_bytes().len() as u16).to_le() as u16) };
+        let mut device_bytes = Vec::new();
+        device_bytes.extend(id_length.iter().cloned());
+        device_bytes.extend(self.device_id.as_bytes());
 
 
         // Device amount - make it possible to define multiple devices. For now, just 1 device supported.
@@ -196,7 +212,7 @@ impl Serializable for MsgStartStreamRMS {
         }
 
         let length_bytes: [u8; 4] =
-            unsafe { transmute((4 + 4 + 4 + 4 + 4 + channels_bytes.len() as i32).to_le()) };
+            unsafe { transmute((4 + 4 + 4 + 2 + device_bytes.len() as i32 + 4 + channels_bytes.len() as i32).to_le()) };
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
         let device_count: [u8; 4] = unsafe { transmute((1 as i32).to_le()) };
