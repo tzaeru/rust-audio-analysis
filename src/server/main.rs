@@ -12,11 +12,7 @@ use messages::MsgType;
 
 extern crate raa;
 use raa::analysis;
-use raa::analysis::pa_interface::Chainable;
-use raa::analysis::pa_interface::Sourcable;
-
-use std::cell::RefCell;
-use std::rc::Rc;
+use raa::analysis::traits::Sourcable;
 
 use std::sync::Arc;
 use std::sync::RwLock;
@@ -28,7 +24,7 @@ fn handle_client(stream: TcpStream) {
 
 fn send_devices(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
-    let mut devices = analysis::pa_interface::SoundioSource::get_devices();
+    let mut devices = analysis::soundio_source::SoundioSource::get_devices();
     let mut device_msg = messages::MsgDevicesList::new();
     device_msg.devices = devices.unwrap();
 
@@ -40,6 +36,15 @@ fn send_test_error(mut stream: &TcpStream) -> Result<usize, std::io::Error>
 {
     let mut error_msg = messages::MsgError::new();
     error_msg.message = "horror".to_string();
+
+    let mut serialized = error_msg.serialize();
+    stream.write(serialized.as_mut_slice())
+}
+
+fn send_error(mut stream: &TcpStream, error: String) -> Result<usize, std::io::Error>
+{
+    let mut error_msg = messages::MsgError::new();
+    error_msg.message = error;
 
     let mut serialized = error_msg.serialize();
     stream.write(serialized.as_mut_slice())
@@ -69,23 +74,23 @@ fn main() {
                     println!("new client: {:?}", addr);
                     
                     let _ = send_devices(&stream);
+                    let _ = send_test_error(&stream);
 
                     // Ready an analysis chain to be used later on after a proper message has been received.
-                    let mut arena = analysis::pa_interface::AArena::new();
-                    let mut arena_rc = Arc::new(RwLock::new(arena));
-                    let mut chain = analysis::pa_interface::AChain::new(arena_rc.clone());
+                    let arena = analysis::analysis::Arena::new();
+                    let arena_rc = Arc::new(RwLock::new(arena));
+                    let mut chain = analysis::analysis::Chain::new(arena_rc.clone());
                     let mut chain_ref = Arc::new(RwLock::new(chain));
 
-                    let rms = Arc::new(RwLock::new(analysis::pa_interface::RMS::new()));
+                    let rms = Arc::new(RwLock::new(analysis::rms::RMS::new()));
                     let rms_id = arena_rc.write().unwrap().add_chainable(rms);
 
-                    let mut source_id = 0u64;
+                    let mut source_id = None;
 
                     let mut send_rms = false;
 
                     // Cap to 20 outgoing messages per second
                     let mut sent_msg_instant = Instant::now();
-                    let send_cap = 20;
 
                     // Buffer for whole message.
                     // Each message is prefixed by message length.
@@ -141,11 +146,11 @@ fn main() {
                                             println!("Device: {}", rms_msg.device_id);
                                             println!("Channels: {:?}", rms_msg.channels);
 
-                                            let source = Arc::new(RwLock::new(analysis::pa_interface::SoundioSource::new(rms_msg.device_id, rms_msg.channels)));
-                                            source_id = arena_rc.write().unwrap().add_sourcable(source);
+                                            let source = Arc::new(RwLock::new(analysis::soundio_source::SoundioSource::new(rms_msg.device_id, rms_msg.channels)));
+                                            source_id = Some(arena_rc.write().unwrap().add_sourcable(source));
 
-                                            chain = analysis::pa_interface::AChain::new(arena_rc.clone());
-                                            chain.set_source(source_id);
+                                            chain = analysis::analysis::Chain::new(arena_rc.clone());
+                                            chain.set_source(source_id.unwrap());
                                             chain.add_node(rms_id);
 
                                             chain_ref = Arc::new(RwLock::new(chain));
@@ -176,29 +181,32 @@ fn main() {
                             
                             let elapsed_as_mills = sent_msg_instant.elapsed().as_secs() * 1000
                                             + sent_msg_instant.elapsed().subsec_nanos() as u64 / 1000000;
+                            let arena_borrow = arena_rc.read().unwrap();
+                            match source_id
+                            {
+                                Some(id) =>
+                                {
+                                    let sourcable = arena_borrow.sourcables[&id].read().unwrap();
+                                    
+                                    match sourcable.get_and_clear_error()
+                                    {
+                                        Some(error) => {
+                                            let _ = send_error(&stream, error);
+                                        }
+                                        None => ()
+                                    }
+                                },
+                                None => ()
+                            }
+
                             if send_rms == true && elapsed_as_mills > 1000/20
                             {
                                 sent_msg_instant = Instant::now();
-
-                                let arena_borrow = arena_rc.read().unwrap();
 
                                 if arena_borrow.chainables[&rms_id].read().unwrap().output().len() > 0
                                 {
                                     send_rms_msg(&stream, arena_borrow.chainables[&rms_id].read().unwrap().output()[0]);
                                 }
-                            }
-
-                            if send_rms == true
-                            {
-                                let arena_borrow = arena_rc.read().unwrap();
-
-                                /*if arena_borrow.sourcables[&source_id].read().unwrap().is_active() == true
-                                {
-                                    println!("Is active at {}", elapsed_as_mills);
-                                }
-                                else {
-                                    println!("Is not active");
-                                }*/
                             }
 
                             let ten_millis = time::Duration::from_millis(10);

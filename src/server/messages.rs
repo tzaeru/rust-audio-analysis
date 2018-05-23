@@ -162,7 +162,7 @@ impl MsgStartStreamRMS {
                            ((data[3] as i32) << 24);
         data = data[4..].to_vec();
 
-        // Read devie ID
+        // Read device ID
         let device_id_length: u16 = data[0] as u16 | ((data[1] as u16) << 8);
         data = data[2..].to_vec();
         let data_clone = data.clone();
@@ -200,7 +200,6 @@ impl Serializable for MsgStartStreamRMS {
         let mut device_bytes = Vec::new();
         device_bytes.extend(id_length.iter().cloned());
         device_bytes.extend(self.device_id.as_bytes());
-
 
         // Device amount - make it possible to define multiple devices. For now, just 1 device supported.
 
