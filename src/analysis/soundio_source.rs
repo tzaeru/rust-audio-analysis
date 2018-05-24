@@ -73,11 +73,11 @@ impl<'a> Sourcable for SoundioSource<'a> {
 
                 for f in 0..stream.frame_count() {
                     for ch_i in 0..channels.len() {
-                        if f%2000 == 0
+                        if f%5000 == 0
                         {
-                            //println!("{}", stream.sample::<i32>(c, f));
+                            //println!("{}", stream.sample::<i32>(channels[ch_i] as usize, f));
                         }
-                        // In reality you shouldn't write to disk in the callback, but have some buffer instead.
+
                         let mut value = (stream.sample::<i32>(channels[ch_i] as usize, f) as f32)/std::i32::MAX as f32;
                         if !value.is_normal()
                         {
@@ -180,5 +180,11 @@ impl<'a> Sourcable for SoundioSource<'a> {
         *self.error.write().unwrap() = "".to_string();
 
         return Some(error_clone);
+    }
+}
+
+impl<'a> Drop for SoundioSource<'a> {
+    fn drop(&mut self) {
+        println!("Dropping SoundioSource!");
     }
 }

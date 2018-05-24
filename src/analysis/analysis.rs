@@ -46,6 +46,15 @@ impl Arena {
 
         return id;
     }
+
+    pub fn remove_sourcable(&mut self, id: u64) {
+
+        self.sourcables.remove(&id);
+    }
+
+    pub fn remove_chainable(&mut self, id: u64) {
+        self.chainables.remove(&id);
+    }
 }
 
 pub struct Chain {

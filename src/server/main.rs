@@ -74,7 +74,7 @@ fn main() {
                     println!("new client: {:?}", addr);
                     
                     let _ = send_devices(&stream);
-                    let _ = send_test_error(&stream);
+                    //let _ = send_test_error(&stream);
 
                     // Ready an analysis chain to be used later on after a proper message has been received.
                     let arena = analysis::analysis::Arena::new();
@@ -166,13 +166,12 @@ fn main() {
                                     }
                                 },
                                 Err(e) => {
-                                    //println!("{:?}", e.kind());
-                                    //println!("{:?}", e.raw_os_error());
-
                                     match e.kind() {
                                         std::io::ErrorKind::WouldBlock => {},
                                         _ => {
                                             println!("Breaking.");
+                                            arena_rc.write().unwrap().remove_sourcable(source_id.unwrap());
+                                            arena_rc.write().unwrap().remove_chainable(rms_id);
                                             break;
                                         },
                                     }
@@ -205,7 +204,16 @@ fn main() {
 
                                 if arena_borrow.chainables[&rms_id].read().unwrap().output().len() > 0
                                 {
-                                    send_rms_msg(&stream, arena_borrow.chainables[&rms_id].read().unwrap().output()[0]);
+                                    let error = send_rms_msg(&stream, arena_borrow.chainables[&rms_id].read().unwrap().output()[0]);
+                                    match error
+                                    {
+                                        Ok(_) => (),
+                                        Err(e) => {
+                                            println!("Connection lost: {:?}", e);
+                                            arena_rc.write().unwrap().remove_sourcable(source_id.unwrap());
+                                            arena_rc.write().unwrap().remove_chainable(rms_id);
+                                        }
+                                    }
                                 }
                             }
 
@@ -217,7 +225,7 @@ fn main() {
                 });
             },
             Err(e) => {
-                
+                //println!("Couldn't accept client connection, {:?}", e);
             },
         }
         let ten_millis = time::Duration::from_millis(10);

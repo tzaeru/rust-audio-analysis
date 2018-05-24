@@ -307,8 +307,8 @@ impl Serializable for MsgError {
 
         let type_bytes: [u8; 4] = unsafe { transmute((self.msg_type.clone() as i32).to_le()) };
         let message_length: [u8; 2] = unsafe { transmute ((self.message.as_bytes().len() as u16).to_le() as u16) };
-        // Length: 4 from the length information (u32) itself, 4 from the length information of the error message, + error message length
-        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + 4 + self.message.as_bytes().len() as i32).to_le()) };
+        // Length: 4 from the length information (u32) itself, 2 from the length information of the error message, + error message length
+        let length_bytes: [u8; 4] = unsafe { transmute((4 + 4 + 2 + self.message.as_bytes().len() as i32).to_le()) };
 
         bytes.extend(length_bytes.iter().cloned());
         bytes.extend(type_bytes.iter().cloned());
