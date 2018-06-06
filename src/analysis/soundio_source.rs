@@ -63,7 +63,6 @@ impl<'a> Sourcable for SoundioSource<'a> {
                 unleaved_buffer.push(Vec::new());
             }
             // Iterate through the whole interleaved buffer, moving it to unleaved buffer.
-
             let mut frames_left = stream.frame_count_max();
             loop {
                 if let Err(e) = stream.begin_read(frames_left) {
@@ -94,8 +93,10 @@ impl<'a> Sourcable for SoundioSource<'a> {
 
                 stream.end_read();
             }
-
-            chain.write().unwrap().source_cb(unleaved_buffer, stream.frame_count());
+            match chain.try_write() {
+                Ok(lock) => lock.source_cb(unleaved_buffer, stream.frame_count()),
+                Err(e) => println!("Error writing to chain: {:?}", e)
+            }
 
             return ();
         };
@@ -147,7 +148,11 @@ impl<'a> Sourcable for SoundioSource<'a> {
         self.stream = Option::Some(stream);
     }
 
-    fn stop(&self) -> () {}
+    fn stop(&mut self) -> () {
+        println!("Stopping SoundIO source.");
+        self.stream.take().unwrap().pause(true).unwrap();
+        println!("Stopped SoundIO Source!");
+    }
 
     fn is_active(&self) -> bool
     {

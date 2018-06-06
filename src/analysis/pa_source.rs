@@ -100,7 +100,7 @@ impl Sourcable for PASource {
         self.stream = Option::Some(stream);
     }
 
-    fn stop(&self) -> () {}
+    fn stop(&mut self) -> () {}
 
     fn is_active(&self) -> bool
     {

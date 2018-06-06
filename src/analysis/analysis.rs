@@ -48,7 +48,6 @@ impl Arena {
     }
 
     pub fn remove_sourcable(&mut self, id: u64) {
-
         self.sourcables.remove(&id);
     }
 
@@ -93,12 +92,24 @@ impl Chain {
 
     pub fn stop(&mut self) {
         self.running = false;
+        match self.source {
+            Some(source) =>
+            {
+                let arena_borrow = self.arena.read().unwrap();
+                arena_borrow.sourcables[&source].write().unwrap().stop();
+                self.running = true;
+            },
+            None => println!("No sourcable set for chain."),
+        }
     }
 
     pub fn source_cb(&self, buffer: Vec<Vec<f32>>, _frames: usize) {
-        for i in 0..self.nodes.len() {
-            let node = &self.arena.read().unwrap().chainables[&self.nodes[i]];
-            node.write().unwrap().update(&buffer);
+        if self.running == true
+        {
+            for i in 0..self.nodes.len() {
+                let node = &self.arena.read().unwrap().chainables[&self.nodes[i]];
+                node.write().unwrap().update(&buffer);
+            }
         }
     }
 

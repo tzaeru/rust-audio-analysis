@@ -123,7 +123,7 @@ fn main() {
                                     let mut msg_length: i32 = msg_buffer[0] as i32 | ((msg_buffer[1] as i32) << 8) | ((msg_buffer[2] as i32)  << 16) | ((msg_buffer[3] as i32) << 24);
                                     
                                     println!("\nMessage length: {}", msg_length);
-                                    println!("Buffer length: {}\n", msg_buffer.len());
+                                    println!("Buffer length: {}", msg_buffer.len());
 
                                     // We have a full length message if buffer has msg_length bytes
                                     while msg_buffer.len() >= msg_length as usize
@@ -137,11 +137,29 @@ fn main() {
 
                                         if msg_type == MsgType::MSG_GET_RMS as i32
                                         {
+                                            println!("Stopping RMS chain..");
                                             chain_ref.write().unwrap().stop();
 
+                                            println!("Stopped RMS chain!");
+                                            match source_id
+                                            {
+                                                Some(id) => {
+                                                    println!("Removing sourcable..");
+                                                    match arena_rc.write() {
+                                                        Ok(mut rc) => (rc.remove_sourcable(id)),
+                                                        Err(e) => (println!("Could not write: {:?}", e))
+                                                    }
+                                                    println!("Removed sourcable!");
+                                                }
+                                                None => ()
+                                            };
+
                                             // Ignore length & type when passing message_bytes
+                                            println!("1");
                                             let msg_length = message_bytes.len();
+                                            println!("2");
                                             let messages_bytes_without_type = message_bytes.drain(8..msg_length).collect();
+                                            println!("Creating RMS msg..");
                                             let rms_msg = messages::MsgStartStreamRMS::deserialized(messages_bytes_without_type);
                                             println!("Device: {}", rms_msg.device_id);
                                             println!("Channels: {:?}", rms_msg.channels);
@@ -152,9 +170,11 @@ fn main() {
                                             chain = analysis::analysis::Chain::new(arena_rc.clone());
                                             chain.set_source(source_id.unwrap());
                                             chain.add_node(rms_id);
+                                            println!("Created new RMS chain!");
 
                                             chain_ref = Arc::new(RwLock::new(chain));
                                             chain_ref.write().unwrap().start(chain_ref.clone());
+                                            println!("Started RMS chain!\n");
 
                                             send_rms = true;
                                         }
@@ -220,7 +240,7 @@ fn main() {
                             let ten_millis = time::Duration::from_millis(10);
                             thread::sleep(ten_millis);
                     }
-
+                    println!("Stopped looping for data - client disconnected?");
                     chain_ref.write().unwrap().stop();
                 });
             },
