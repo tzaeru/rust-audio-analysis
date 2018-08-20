@@ -17,6 +17,6 @@ pub trait Sourcable {
 }
 
 pub trait Chainable {
-    fn update(&mut self, buffer: &Vec<Vec<f32>>);
+    fn update(&mut self, buffer: &Vec<Vec<f32>>, samplerate: u32);
     fn output(&self) -> &Vec<f32>;
 }

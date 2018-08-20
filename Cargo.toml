@@ -4,9 +4,18 @@ version = "0.1.0"
 authors = ["tzaeru <tzaeru@gmail.com>"]
 
 [dependencies]
+num-rational = "0.1.42"
+num-complex = "0.1.42"
+num-traits = "0.2"
 portaudio = "0.7.0"
-lazy_static = "0.2"
+lazy_static = "1.0.0"
 soundio = {git = "https://github.com/Timmmm/soundio-rs"}
+conrod = {git = "https://github.com/PistonDevelopers/conrod", features = ["piston", "glium", "winit"]}
+winit = { version = "0.12", optional = true }
+glium = { version = "0.21", optional = true }
+find_folder = "0.3.0"
+rand = "0.5.0"
+rustfft = {git = "https://github.com/awelkie/RustFFT"}
 
 [[bin]]
 name = "server"
@@ -19,6 +28,10 @@ path = "src/client_test/main.rs"
 [[bin]]
 name = "test"
 path = "src/test/main.rs"
+
+[[bin]]
+name = "gui"
+path = "src/gui/main.rs"
 
 [lib]
 name = "raa"

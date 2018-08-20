@@ -11,7 +11,7 @@ impl RMS {
 }
 
 impl Chainable for RMS {
-    fn update(&mut self, buffer: &Vec<Vec<f32>>) {
+    fn update(&mut self, buffer: &Vec<Vec<f32>>, _samplerate: u32) {
 
         let mut rms = 0f32;
         for i in 0..buffer.len()

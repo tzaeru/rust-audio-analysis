@@ -95,10 +95,10 @@ impl Chain {
         self.running = false;
     }
 
-    pub fn source_cb(&self, buffer: Vec<Vec<f32>>, _frames: usize) {
+    pub fn source_cb(&self, buffer: Vec<Vec<f32>>, _frames: usize, samplerate: u32) {
         for i in 0..self.nodes.len() {
             let node = &self.arena.read().unwrap().chainables[&self.nodes[i]];
-            node.write().unwrap().update(&buffer);
+            node.write().unwrap().update(&buffer, samplerate);
         }
     }
 

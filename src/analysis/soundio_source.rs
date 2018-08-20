@@ -95,7 +95,7 @@ impl<'a> Sourcable for SoundioSource<'a> {
                 stream.end_read();
             }
 
-            chain.write().unwrap().source_cb(unleaved_buffer, stream.frame_count());
+            chain.write().unwrap().source_cb(unleaved_buffer, stream.frame_count(), stream.sample_rate() as u32);
 
             return ();
         };

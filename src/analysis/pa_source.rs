@@ -79,7 +79,7 @@ impl Sourcable for PASource {
                 i += device_info.max_input_channels;
             }
 
-            chain.write().unwrap().source_cb(unleaved_buffer, frames);
+            chain.write().unwrap().source_cb(unleaved_buffer, frames, SAMPLE_RATE as u32);
 
             if chain.write().unwrap().running == true
             {
